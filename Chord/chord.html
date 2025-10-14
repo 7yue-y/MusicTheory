@@ -5,6 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>乐理知识库 - 和弦查找</title>
     <link rel="stylesheet" href="../Main.css">
+    <style>
+        .chord-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .chord-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chord-input-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .chord-input {
+            padding: 10px 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .chord-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        
+        .chord-input::placeholder {
+            color: #999;
+        }
+        
+        .notes-input-container {
+            margin-bottom: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .chord-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -62,8 +109,25 @@
                     
                     <div class="tab-content" id="notes-search">
                         <div class="notes-input-container">
-                            <div class="notes-input-box">
-                                <input type="text" id="chordNotesInput" class="search-input" placeholder="输入音符，如：C E G 或 C Eb G Bb">
+                            <div class="chord-inputs">
+                                <div class="chord-input-group">
+                                    <label class="chord-input-label">根音 (Root)</label>
+                                    <input type="text" id="rootNoteInput" class="chord-input" placeholder="如: C" maxlength="2">
+                                </div>
+                                <div class="chord-input-group">
+                                    <label class="chord-input-label">三音 (Third)</label>
+                                    <input type="text" id="thirdNoteInput" class="chord-input" placeholder="如: E 或 Eb" maxlength="2">
+                                </div>
+                                <div class="chord-input-group">
+                                    <label class="chord-input-label">五音 (Fifth)</label>
+                                    <input type="text" id="fifthNoteInput" class="chord-input" placeholder="如: G 或 G#" maxlength="2">
+                                </div>
+                                <div class="chord-input-group">
+                                    <label class="chord-input-label">七音 (Seventh)</label>
+                                    <input type="text" id="seventhNoteInput" class="chord-input" placeholder="如: B 或 Bb (可选)" maxlength="2">
+                                </div>
+                            </div>
+                            <div class="search-box">
                                 <button id="chordNotesSearchBtn" class="search-btn">
                                     <span class="btn-text">分析和弦</span>
                                     <span class="loading-spinner" style="display: none;"></span>
@@ -80,11 +144,11 @@
                                 <button class="note-btn" data-note="B">B</button>
                                 <button class="note-btn" data-note="#">#</button>
                                 <button class="note-btn" data-note="b">b</button>
-                                <button class="note-btn" data-note=" ">空格</button>
                             </div>
                         </div>
                         <div class="search-tips">
-                            <p>输入音符序列，系统将分析可能的和弦，如：C E G 可能为 C大三和弦</p>
+                            <p>输入和弦的各音级音符，系统将以根音为基础分析和弦类型。七音为可选输入。</p>
+                            <p>例如：输入 E G B 将识别为 E小三和弦</p>
                         </div>
                     </div>
                 </div>

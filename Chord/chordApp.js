@@ -47,10 +47,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabContents = document.querySelectorAll('.tab-content');
     const chordNameInput = document.getElementById('chordNameInput');
     const chordNameSearchBtn = document.getElementById('chordNameSearchBtn');
-    const chordNotesInput = document.getElementById('chordNotesInput');
+    const rootNoteInput = document.getElementById('rootNoteInput');
+    const thirdNoteInput = document.getElementById('thirdNoteInput');
+    const fifthNoteInput = document.getElementById('fifthNoteInput');
+    const seventhNoteInput = document.getElementById('seventhNoteInput');
     const chordNotesSearchBtn = document.getElementById('chordNotesSearchBtn');
     const noteButtons = document.querySelectorAll('.note-btn');
     const resultsContainer = document.getElementById('resultsContainer');
+    
+    // 当前聚焦的输入框
+    let currentFocusedInput = rootNoteInput;
+    
+    // 为四个输入框添加焦点事件
+    [rootNoteInput, thirdNoteInput, fifthNoteInput, seventhNoteInput].forEach(input => {
+        input.addEventListener('focus', () => {
+            currentFocusedInput = input;
+        });
+    });
     
     // 标签页切换
     tabButtons.forEach(button => {
@@ -90,17 +103,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 按音符分析和弦
     function analyzeChordFromNotes() {
-        const query = chordNotesInput.value.trim();
-        if (!query) {
-            showNotification('请输入音符序列', 'warning');
+        const rootNote = rootNoteInput.value.trim();
+        const thirdNote = thirdNoteInput.value.trim();
+        const fifthNote = fifthNoteInput.value.trim();
+        const seventhNote = seventhNoteInput.value.trim();
+        
+        if (!rootNote || !thirdNote || !fifthNote) {
+            showNotification('请至少输入根音、三音和五音', 'warning');
             return;
         }
         
         setLoadingState(chordNotesSearchBtn, true);
         
         setTimeout(() => {
-            const result = chordGenerator.analyzeChordFromNotes(query);
-            displayResult(result, query, 'notes');
+            const result = chordGenerator.analyzeChordByNoteDegrees(rootNote, thirdNote, fifthNote, seventhNote);
+            displayResult(result, `${rootNote} ${thirdNote} ${fifthNote} ${seventhNote}`, 'notes');
             setLoadingState(chordNotesSearchBtn, false);
         }, 500);
     }
@@ -129,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li>C大三和弦 或 Cmaj</li>
                         <li>Am小三和弦 或 Am</li>
                         <li>G7属七和弦 或 G7</li>
-                        <li>C E G (分析音符序列)</li>
+                        <li>分别输入根音、三音、五音和七音</li>
                     </ul>
                 </div>
             `;
@@ -140,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 description = chordGenerator.generateChordDescription(result);
                 title = result.name;
             } else {
-                description = chordGenerator.generateNotesAnalysisDescription(result);
+                description = chordGenerator.generateNoteDegreesAnalysisDescription(result);
                 title = '和弦分析结果';
             }
             
@@ -202,13 +219,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (line.trim() && !line.startsWith('\n')) {
                         if (line.match(/^\d+\./)) {
                             // 和弦项目
-                            const chordMatch = line.match(/^\d+\.\s+(.+)\s+\(匹配度:\s+(\d+)%\)/);
+                            const chordMatch = line.match(/^\d+\.\s+(.+)/);
                             if (chordMatch) {
                                 htmlContent += `
                                     <div class="chord-result">
                                         <div class="chord-header">
                                             <h4>${chordMatch[1]}</h4>
-                                            <span class="match-score">匹配度: ${chordMatch[2]}%</span>
                                         </div>
                                 `;
                             } else {
@@ -273,15 +289,38 @@ document.addEventListener('DOMContentLoaded', function() {
     noteButtons.forEach(button => {
         button.addEventListener('click', () => {
             const note = button.getAttribute('data-note');
-            const currentValue = chordNotesInput.value;
+            const currentValue = currentFocusedInput.value;
             
-            if (note === ' ') {
-                chordNotesInput.value = currentValue + ' ';
+            // 处理升降号输入
+            if (note === '#' || note === 'b') {
+                // 如果当前输入框为空，不能直接输入升降号
+                if (!currentValue) {
+                    showNotification('请先输入音符字母', 'warning');
+                    return;
+                }
+                
+                // 检查是否已经包含升降号
+                if (currentValue.includes('#') || currentValue.includes('b')) {
+                    showNotification('一个音符只能有一个升降号', 'warning');
+                    return;
+                }
+                
+                currentFocusedInput.value = currentValue + note;
             } else {
-                chordNotesInput.value = currentValue + note;
+                // 输入音符字母时，清空当前值
+                currentFocusedInput.value = note;
             }
             
-            chordNotesInput.focus();
+            currentFocusedInput.focus();
+            
+            // 自动切换到下一个输入框
+            if (currentFocusedInput === rootNoteInput) {
+                thirdNoteInput.focus();
+            } else if (currentFocusedInput === thirdNoteInput) {
+                fifthNoteInput.focus();
+            } else if (currentFocusedInput === fifthNoteInput) {
+                seventhNoteInput.focus();
+            }
         });
     });
     
@@ -295,10 +334,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    chordNotesInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            analyzeChordFromNotes();
-        }
+    // 为四个输入框添加回车键支持
+    [rootNoteInput, thirdNoteInput, fifthNoteInput, seventhNoteInput].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeChordFromNotes();
+            }
+        });
     });
     
     // 初始欢迎信息

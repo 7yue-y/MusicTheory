@@ -2,6 +2,7 @@
 /* 更新日志 */
 // V0.1 支持名称查询和音符分析
 // V0.2 修复计算bug并重置ui界面
+// V0.3 添加音级分析和弦方法，以根音为基础分析和弦
 class ChordGenerator {
     constructor() {
         // 音符类
@@ -417,6 +418,91 @@ class ChordGenerator {
         }
     }
     
+    // 通过音级音符分析和弦（以根音为基础）
+    analyzeChordByNoteDegrees(rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr) {
+        try {
+            // 验证输入
+            if (!rootNoteStr || !thirdNoteStr || !fifthNoteStr) {
+                return { error: "请至少输入根音、三音和五音" };
+            }
+
+            // 转换音符为Note对象
+            const rootNote = this.Note.fromString(rootNoteStr);
+            const thirdNote = this.Note.fromString(thirdNoteStr);
+            const fifthNote = this.Note.fromString(fifthNoteStr);
+            const seventhNote = seventhNoteStr ? this.Note.fromString(seventhNoteStr) : null;
+
+            // 计算相对于根音的音程
+            const intervals = [0]; // 根音自身
+            
+            // 计算三音相对于根音的音程（半音数）
+            let thirdInterval = thirdNote.getSemitones() - rootNote.getSemitones();
+            if (thirdInterval < 0) thirdInterval += 12;
+            intervals.push(thirdInterval);
+            
+            // 计算五音相对于根音的音程
+            let fifthInterval = fifthNote.getSemitones() - rootNote.getSemitones();
+            if (fifthInterval < 0) fifthInterval += 12;
+            intervals.push(fifthInterval);
+            
+            // 如果有七音，计算七音相对于根音的音程
+            if (seventhNote) {
+                let seventhInterval = seventhNote.getSemitones() - rootNote.getSemitones();
+                if (seventhInterval < 0) seventhInterval += 12;
+                intervals.push(seventhInterval);
+            }
+            
+            // 排序音程以便比较
+            intervals.sort((a, b) => a - b);
+            
+            // 查找匹配的和弦类型
+            const possibleChords = [];
+            
+            for (const [type, info] of Object.entries(this.chordPatterns)) {
+                const chordIntervals = info.intervals.map(interval => interval.getSemitones()).sort((a, b) => a - b);
+                
+                // 检查音程是否匹配
+                if (this.arraysEqual(intervals, chordIntervals)) {
+                    const rootNoteStr = rootNote.toString();
+                    const chordNotes = this.calculateChordNotes(rootNote, info.intervals);
+                    
+                    possibleChords.push({
+                        name: `${rootNoteStr}${info.name}`,
+                        root: rootNoteStr,
+                        type: type,
+                        notes: chordNotes,
+                        chineseName: info.name,
+                        englishName: info.englishName,
+                        symbolName: info.symbol ? `${rootNoteStr}${info.symbol}` : rootNoteStr,
+                        characteristic: this.chordCharacteristics[type] || '无特殊描述',
+                        usage: this.chordUsages[type] || '通用',
+                        matchScore: 100 // 完全匹配
+                    });
+                }
+            }
+            
+            if (possibleChords.length === 0) {
+                return { error: "无法识别此音符序列构成的和弦" };
+            }
+            
+            return {
+                inputNotes: [rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr].filter(Boolean),
+                possibleChords: possibleChords
+            };
+        } catch (error) {
+            return { error: `分析和弦时出错: ${error.message}` };
+        }
+    }
+    
+    // 辅助方法：比较两个数组是否相等
+    arraysEqual(arr1, arr2) {
+        if (arr1.length !== arr2.length) return false;
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) return false;
+        }
+        return true;
+    }
+    
     // 辅助方法：计算和弦音符
     calculateChordNotes(rootNote, intervals) {
         const notes = [rootNote];
@@ -495,6 +581,30 @@ class ChordGenerator {
         analysis.possibleChords.forEach((chord, index) => {
             const matchPercent = Math.round(chord.matchScore * 100);
             description += `${index + 1}. ${chord.name} (匹配度: ${matchPercent}%)\n`;
+            description += `   音符: ${chord.notes.join(' - ')}\n`;
+            description += `   中文: ${chord.chineseName}\n`;
+            description += `   英文: ${chord.englishName}\n`;
+            description += `   符号: ${chord.symbolName}\n`;
+            
+            if (index < analysis.possibleChords.length - 1) {
+                description += '\n';
+            }
+        });
+        
+        return description;
+    }
+    
+    // 生成音级分析描述
+    generateNoteDegreesAnalysisDescription(analysis) {
+        if (analysis.error) {
+            return analysis.error;
+        }
+        
+        let description = `🎵 输入音符: ${analysis.inputNotes.join(' ')}\n\n`;
+        description += `🔍 分析结果:\n\n`;
+        
+        analysis.possibleChords.forEach((chord, index) => {
+            description += `${index + 1}. ${chord.name}\n`;
             description += `   音符: ${chord.notes.join(' - ')}\n`;
             description += `   中文: ${chord.chineseName}\n`;
             description += `   英文: ${chord.englishName}\n`;
