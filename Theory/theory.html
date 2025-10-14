@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐理知识库 - 其他乐理查找</title>
+    <link rel="stylesheet" href="../Main.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <h1 class="logo">🎼 乐理知识库</h1>
+                    <p class="tagline">其他乐理查找 - 音乐理论基础与术语</p>
+                </div>
+                
+                <!-- 响应式导航栏 -->
+                <nav class="navbar">
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="../index.html">主页</a></li>
+                        <li><a href="../Scale/scale.html">音阶查找</a></li>
+                        <li><a href="../Chord/chord.html">和弦查找</a></li>
+                        <li><a href="theory.html" class="active">其他乐理查找</a></li>
+                        <li><a href="../Practice/Practice.html">视唱练耳中心</a></li>
+                        <li><a href="about.html">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <section class="page-intro">
+                <h2>乐理知识查询</h2>
+                <p>学习音乐理论基础，包括调号、节奏、音乐术语、调式分析、泛音列等</p>
+            </section>
+            
+            <section class="theory-categories">
+                <h2 class="section-title">乐理知识分类</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <h3>调号系统</h3>
+                        <p>学习各种调的调号，包括升号调和降号调</p>
+                        <button class="category-btn" data-category="keySignatures">查看调号</button>
+                    </div>
+                    <div class="category-card">
+                        <h3>节奏与拍号</h3>
+                        <p>了解不同拍号的含义和节奏类型</p>
+                        <button class="category-btn" data-category="rhythm">查看节奏</button>
+                    </div>
+                    <div class="category-card">
+                        <h3>音乐术语</h3>
+                        <p>学习速度、力度和表情术语</p>
+                        <button class="category-btn" data-category="terminology">查看术语</button>
+                    </div>
+                    <div class="category-card">
+                        <h3>调式分析</h3>
+                        <p>了解各种调式的特点和应用</p>
+                        <button class="category-btn" data-category="modes">查看调式</button>
+                    </div>
+                    <div class="category-card">
+                        <h3>泛音列</h3>
+                        <p>计算和分析音符的泛音列</p>
+                        <button class="category-btn" data-category="harmonics">查看泛音列</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="theorySearchInput" class="search-input" placeholder="输入乐理问题，如：C大调调号、4/4拍含义、力度术语、C泛音列...">
+                        <button id="theorySearchBtn" class="search-btn">
+                            <span class="btn-text">搜索乐理</span>
+                            <span class="loading-spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                    <div class="search-tips">
+                        <p>请输入乐理相关问题，系统将提供详细解答。泛音列查询格式：C泛音列、G泛音列等</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="examples-section">
+                <h2 class="section-title">常见问题</h2>
+                <div class="examples-grid">
+                    <div class="example-item" data-query="C大调调号">C大调调号</div>
+                    <div class="example-item" data-query="4/4拍含义">4/4拍含义</div>
+                    <div class="example-item" data-query="力度术语">力度术语</div>
+                    <div class="example-item" data-query="多利亚调式">多利亚调式</div>
+                    <div class="example-item" data-query="关系大小调">关系大小调</div>
+                    <div class="example-item" data-query="五声音阶">五声音阶</div>
+                    <div class="example-item" data-query="C泛音列">C泛音列</div>
+                    <div class="example-item" data-query="泛音列应用">泛音列应用</div>
+                </div>
+            </section>
+            
+            <section class="results-section">
+                <h2 class="section-title">搜索结果</h2>
+                <div id="resultsContainer" class="results-container">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">🎹</div>
+                        <h3>乐理知识查询</h3>
+                        <p>输入乐理相关问题，系统将提供详细解答。支持调号、节奏、术语、调式、泛音列等查询</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2023 乐理知识库系统 | 乐理知识查询</p>
+        </footer>
+    </div>
+
+    <!-- 引入乐理知识数据库和应用程序 -->
+    <script src="theoryGenerator.js"></script>
+    <script src="theoryApp.js"></script>
+</body>
+</html>

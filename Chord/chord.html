@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐理知识库 - 和弦查找</title>
+    <link rel="stylesheet" href="../Main.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <h1 class="logo">🎼 乐理知识库</h1>
+                    <p class="tagline">和弦查找 - 查询和弦构成与性质</p>
+                </div>
+                
+                <!-- 响应式导航栏 -->
+                <nav class="navbar">
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="../index.html">主页</a></li>
+                        <li><a href="../Scale/scale.html">音阶查找</a></li>
+                        <li><a href="chord.html" class="active">和弦查找</a></li>
+                        <li><a href="../Theory/theory.html">其他乐理查找</a></li>
+                        <li><a href="../Practice/Practice.html">视唱练耳中心</a></li>
+                        <li><a href="about.html">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <section class="page-intro">
+                <h2>和弦查找工具</h2>
+                <p>通过和弦名称或音符序列查询和弦构成与性质</p>
+            </section>
+            
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-tabs">
+                        <button class="tab-button active" data-tab="name-search">按名称查找</button>
+                        <button class="tab-button" data-tab="notes-search">按音符查找</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="name-search">
+                        <div class="search-box">
+                            <input type="text" id="chordNameInput" class="search-input" placeholder="输入和弦名称，如：C大三和弦、Am、G7、Dm7...">
+                            <button id="chordNameSearchBtn" class="search-btn">
+                                <span class="btn-text">搜索和弦</span>
+                                <span class="loading-spinner" style="display: none;"></span>
+                            </button>
+                        </div>
+                        <div class="search-tips">
+                            <p>支持中文和英文和弦名称，如：C大三和弦 或 Cmaj，Am小三和弦 或 Am</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="notes-search">
+                        <div class="notes-input-container">
+                            <div class="notes-input-box">
+                                <input type="text" id="chordNotesInput" class="search-input" placeholder="输入音符，如：C E G 或 C Eb G Bb">
+                                <button id="chordNotesSearchBtn" class="search-btn">
+                                    <span class="btn-text">分析和弦</span>
+                                    <span class="loading-spinner" style="display: none;"></span>
+                                </button>
+                            </div>
+                            <div class="quick-notes">
+                                <span class="notes-label">快速输入:</span>
+                                <button class="note-btn" data-note="C">C</button>
+                                <button class="note-btn" data-note="D">D</button>
+                                <button class="note-btn" data-note="E">E</button>
+                                <button class="note-btn" data-note="F">F</button>
+                                <button class="note-btn" data-note="G">G</button>
+                                <button class="note-btn" data-note="A">A</button>
+                                <button class="note-btn" data-note="B">B</button>
+                                <button class="note-btn" data-note="#">#</button>
+                                <button class="note-btn" data-note="b">b</button>
+                                <button class="note-btn" data-note=" ">空格</button>
+                            </div>
+                        </div>
+                        <div class="search-tips">
+                            <p>输入音符序列，系统将分析可能的和弦，如：C E G 可能为 C大三和弦</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="results-section">
+                <h2 class="section-title">搜索结果</h2>
+                <div id="resultsContainer" class="results-container">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">🎶</div>
+                        <h3>和弦查找工具</h3>
+                        <p>输入和弦名称或音符序列，系统将显示和弦构成和相关信息</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 艺考乐理知识库 | 和弦查找工具</p>
+        </footer>
+    </div>
+
+    <!-- 引入和弦相关脚本 -->
+    <script src="chordGenerator.js"></script>
+    <script src="chordApp.js"></script>
+</body>
+</html>

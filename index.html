@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐理知识库 - 主页</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="stylesheet" href="Main.css">
+</head>
+<body>
+    <div class="container">
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <h1 class="logo">🎼 乐理知识库</h1>
+                <p class="tagline">专业的音乐理论学习与查询工具</p>
+            </div>
+            
+            <!-- 响应式导航栏 -->
+            <nav class="navbar">
+                <button class="nav-toggle" id="navToggle">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <ul class="nav-list" id="navList">
+                    <li><a href="index.html" class="active">主页</a></li>
+                    <li><a href="Scale/scale.html">音阶查找</a></li>
+                    <li><a href="Chord/chord.html">和弦查找</a></li>
+                    <li><a href="Theory/theory.html">其他乐理查找</a></li>
+                    <li><a href="Practice/Practice.html">试唱练耳中心</a></li>
+                    <li><a href="about.html">关于</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+        
+        <main class="main-content">
+            <!-- 其余内容保持不变 -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h2>欢迎使用乐理知识库</h2>
+                    <p>一个全面的音乐理论学习与查询平台，帮助您快速掌握乐理知识</p>
+                    <div class="hero-actions">
+                        <a href="Scale/scale.html" class="hero-btn">音阶查询</a>
+                        <a href="Chord/chord.html" class="hero-btn">和弦查询</a>
+                        <a href="Theory/theory.html" class="hero-btn">乐理知识</a>
+                        <a href="Practice/Practice.html" class="hero-btn">视唱练耳练习</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="music-staff">
+                        <div class="staff-line"></div>
+                        <div class="staff-line"></div>
+                        <div class="staff-line"></div>
+                        <div class="staff-line"></div>
+                        <div class="staff-line"></div>
+                        <div class="note note-1">♩</div>
+                        <div class="note note-2">♪</div>
+                        <div class="note note-3">♫</div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="features-section">
+                <h2 class="section-title">核心功能</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎵</div>
+                        <h3>音阶查找</h3>
+                        <p>精确生成各种音阶的音符序列，包括大调、小调、五声音阶、布鲁斯音阶等</p>
+                        <a href="Scale/scale.html" class="feature-link">开始使用 →</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎶</div>
+                        <h3>和弦查找</h3>
+                        <p>查询各种和弦的构成、性质和用途，包括三和弦、七和弦、延伸和弦等</p>
+                        <a href="Chord/chord.html" class="feature-link">开始使用 →</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎹</div>
+                        <h3>乐理知识</h3>
+                        <p>学习音乐理论基础，包括调号、节奏、音乐术语、调式分析等</p>
+                        <a href="Theory/theory.html" class="feature-link">开始使用 →</a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="quick-start-section">
+                <h2 class="section-title">快速开始</h2>
+                <div class="quick-start-grid">
+                    <div class="quick-start-card">
+                        <h3>常见音阶查询</h3>
+                        <ul>
+                            <li><a href="Scale/scale.html?query=C大调音阶">C大调音阶</a></li>
+                            <li><a href="Scale/scale.html?query=A自然小调音阶">A自然小调音阶</a></li>
+                            <li><a href="Scale/scale.html?query=G五声音阶">G五声音阶</a></li>
+                            <li><a href="Scale/scale.html?query=E和声小调音阶">E和声小调音阶</a></li>
+                        </ul>
+                    </div>
+                    <div class="quick-start-card">
+                        <h3>常见和弦查询</h3>
+                        <ul>
+                            <li><a href="Chord/chord.html">C大三和弦</a></li>
+                            <li><a href="Chord/chord.html">Am小三和弦</a></li>
+                            <li><a href="Chord/chord.html">G7属七和弦</a></li>
+                            <li><a href="Chord/chord.html">Dm7小七和弦</a></li>
+                        </ul>
+                    </div>
+                    <div class="quick-start-card">
+                        <h3>乐理知识</h3>
+                        <ul>
+                            <li><a href="Theory/theory.html">调号系统</a></li>
+                            <li><a href="Theory/theory.html">节奏与拍号</a></li>
+                            <li><a href="Theory/theory.html">音乐术语</a></li>
+                            <li><a href="Theory/theory.html">调式分析</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 艺考乐理知识库</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视唱练耳训练平台 - 金耳朵练习中心</title>
+    <link rel="stylesheet" href="Practice.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="main-header">
+        <nav class="left-nav">
+            <ul>
+                <li><a href="../index.html">返回主页</a></li>
+            </ul>
+        </nav>
+        <div class="site-title">
+            <h1>金耳朵练习中心</h1>
+        </div>
+        <nav class="right-nav">
+            <div class="dropdown">
+                <button class="dropdown-toggle">导航菜单</button>
+                <ul class="dropdown-menu">
+                    <li><a href="single-note.html">单音听辨</a></li>
+                    <li><a href="../Chord/chord.html">和弦听辨</a></li>
+                    <li><a href="interval.html">音程听辨</a></li>
+                    <li><a href="melody.html">旋律听辨</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>视唱练耳训练平台</h1>
+            <p class="subtitle">通过MIDI练习视唱，实时显示音高，提升音乐感知能力</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>钢琴窗 & MIDI编辑器</h2>
+                <div class="control-panel">
+                    <button id="playBtn" class="primary">播放</button>
+                    <button id="stopBtn">停止</button>
+                    <button id="recordBtn">开始录音</button>
+                    <select id="tempoSelect">
+                        <option value="30">极慢 (30 BPM)</option>
+                        <option value="60">慢速 (60 BPM)</option>
+                        <option value="80" selected>中速 (80 BPM)</option>
+                        <option value="100">快速 (100 BPM)</option>
+                        <option value="120">很快 (120 BPM)</option>
+                    </select>
+                </div>
+                
+                <div class="piano-container">
+                    <div class="piano" id="piano"></div>
+                </div>
+                
+                <div class="midi-editor">
+                    <h3>MIDI编辑器 (4小节)</h3>
+                    <div class="editor-controls">
+                        <button id="clearEditorBtn">清除编辑器</button>
+                        <button id="savePresetBtn">保存为预设</button>
+                    </div>
+                    <div class="editor-container">
+                        <div class="note-labels" id="noteLabels"></div>
+                        <div class="editor-grid" id="editorGrid"></div>
+                    </div>
+                </div>
+                
+                <div class="note-display" id="currentNote">准备播放...</div>
+                
+                <div class="status" id="status">准备就绪</div>
+            </div>
+            
+            <div class="panel">
+                <h2>预设管理</h2>
+                <div class="control-panel">
+                    <button id="loadPresetBtn">加载预设</button>
+                    <button id="deletePresetBtn">删除预设</button>
+                    <input type="text" id="presetName" placeholder="预设名称">
+                </div>
+                
+                <div class="collapsible-section">
+                    <button class="collapse-toggle" id="presetToggle">▼ 显示预设</button>
+                    <div class="preset-list" id="presetList">
+                        <div class="preset-item active">C自然大调</div>
+                        <div class="preset-item">C和声大调</div>
+                        <div class="preset-item">C旋律大调(上行)</div>
+                        <div class="preset-item">C旋律大调(下行)</div>
+                        <div class="preset-item">a自然小调</div>
+                        <div class="preset-item">a和声小调</div>
+                        <div class="preset-item">a旋律小调(上行)</div>
+                        <div class="preset-item">a旋律小调(下行)</div>
+                    </div>
+                </div>
+                
+                <h2>录音与回放</h2>
+                <div class="control-panel">
+                    <button id="recordCustomBtn">录制演唱</button>
+                    <button id="playCustomBtn">播放录音</button>
+                    <button id="clearCustomBtn">清除录音</button>
+                </div>
+                
+                <div class="note-display" id="customNote">准备录制...</div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                
+                <h2>音高显示</h2>
+                <div class="pitch-display" id="pitchDisplay">-- Hz</div>
+                <div class="visualizer" id="visualizer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="Practice.js"></script>
+</body>
+</html>

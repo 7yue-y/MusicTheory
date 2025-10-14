@@ -1,0 +1,334 @@
+/* 音阶选择器样式 */
+.scale-selector {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.selector-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 150px;
+}
+
+.selector-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+}
+
+.selector {
+    padding: 12px 15px;
+    border: 2px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    background: white;
+    transition: var(--transition);
+}
+
+.selector:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* 音符输入区域 */
+.notes-input-container {
+    margin-bottom: 15px;
+}
+
+.notes-input-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.quick-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+}
+
+.notes-label {
+    font-size: 0.85rem;
+    color: var(--gray-dark);
+    margin-right: 5px;
+}
+
+.note-btn {
+    padding: 5px 10px;
+    background: var(--gray-light);
+    border: 1px solid var(--gray-medium);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.note-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* 音阶分析结果样式 */
+.analysis-results {
+    margin-top: 15px;
+}
+
+.analysis-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .scale-selector {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .selector-group {
+        min-width: 100%;
+    }
+    
+    .notes-input-box {
+        flex-direction: column;
+    }
+    
+    .quick-notes {
+        justify-content: center;
+    }
+}
+
+
+/* 五度圈样式 */
+.circle-of-fifths-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.circle-diagram {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.circle-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primary-color);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.circle-center:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.circle-note {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    transform: translate(-50%, -50%);
+}
+
+.circle-note.sharp {
+    background: var(--accent-color);
+    color: white;
+}
+
+.circle-note.flat {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.circle-note:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* 五度圈音符位置 */
+.circle-note[data-note="G"] { top: 20%; left: 70%; }
+.circle-note[data-note="D"] { top: 10%; left: 50%; }
+.circle-note[data-note="A"] { top: 20%; left: 30%; }
+.circle-note[data-note="E"] { top: 40%; left: 15%; }
+.circle-note[data-note="B"] { top: 60%; left: 10%; }
+.circle-note[data-note="F#"] { top: 80%; left: 15%; }
+.circle-note[data-note="C#"] { top: 90%; left: 30%; }
+.circle-note[data-note="F"] { top: 80%; left: 70%; }
+.circle-note[data-note="Bb"] { top: 90%; left: 50%; }
+.circle-note[data-note="Eb"] { top: 80%; left: 30%; }
+.circle-note[data-note="Ab"] { top: 60%; left: 15%; }
+.circle-note[data-note="Db"] { top: 40%; left: 10%; }
+.circle-note[data-note="Gb"] { top: 20%; left: 15%; }
+.circle-note[data-note="Cb"] { top: 10%; left: 30%; }
+
+.circle-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.circle-info {
+    background: var(--gray-light);
+    padding: 15px;
+    border-radius: var(--border-radius);
+}
+
+.circle-info h4 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.circle-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+}
+
+/* 建议样式 */
+.suggestion {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+    color: #856404;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .circle-of-fifths-container {
+        flex-direction: column;
+    }
+    
+    .circle-diagram {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .circle-note {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* 音阶分析结果改进样式 */
+.analysis-subtitle {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+    margin-top: 5px;
+}
+
+.analysis-info {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.primary-result {
+    border: 2px solid var(--primary-color);
+    background: #f0f7ff;
+}
+
+.match-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.complete-badge {
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.folk-badge {
+    background: #ffc107;
+    color: #212529;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* 音符高亮样式 */
+.note-item-small.first-note {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.note-item-small.matched-note {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.note-item-small.unmatched-note {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    opacity: 0.7;
+}
+
+.bianyin-info {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #856404;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .match-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .chord-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .chord-header h4 {
+        margin-bottom: 5px;
+    }
+}

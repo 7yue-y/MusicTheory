@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐理知识库 - 音阶查找</title>
+    <!--  <link rel="stylesheet" href="styles.css">  -->
+    <link rel="stylesheet" href="../Main.css">
+    <link rel="stylesheet" href="scale.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <h1 class="logo">🎼 乐理知识库</h1>
+                    <p class="tagline">音阶查找 - 多种方式查询音阶</p>
+                </div>
+                
+                <!-- 响应式导航栏 -->
+                <nav class="navbar">
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="../index.html">主页</a></li>
+                        <li><a href="scale.html" class="active">音阶查找</a></li>
+                        <li><a href="../Chord/chord.html">和弦查找</a></li>
+                        <li><a href="../Theory/theory.html">其他乐理查找</a></li>
+                        <li><a href="../Practice/Practice.html">视唱练耳中心</a></li>
+                        <li><a href="about.html">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <section class="page-intro">
+                <h2>音阶查找工具</h2>
+                <p>通过快速搜索或音符分析，系统将生成精确的音阶音符序列</p>
+            </section>
+            
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-tabs">
+                        <button class="tab-button active" data-tab="quick-search">快速搜索</button>
+                        <button class="tab-button" data-tab="input-search">输入搜索</button>
+                        <button class="tab-button" data-tab="notes-analysis">音符分析</button>
+                        <button class="tab-button" data-tab="circle-of-fifths">五度圈检索</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="quick-search">
+                        <div class="scale-selector">
+                            <div class="selector-group">
+                                <label for="rootNoteSelect">主音</label>
+                                <select id="rootNoteSelect" class="selector">
+                                    <optgroup label="无升降号">
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                        <option value="G">G</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                    </optgroup>
+                                    <optgroup label="升号调">
+                                        <option value="C#">C#</option>
+                                        <option value="D#">D#</option>
+                                        <option value="F#">F#</option>
+                                        <option value="G#">G#</option>
+                                        <option value="A#">A#</option>
+                                    </optgroup>
+                                    <optgroup label="降号调">
+                                        <option value="Db">Db</option>
+                                        <option value="Eb">Eb</option>
+                                        <option value="Gb">Gb</option>
+                                        <option value="Ab">Ab</option>
+                                        <option value="Bb">Bb</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            
+                    <!-- 增加民族调式选项 -->
+                    <div class="selector-group">
+                        <label for="scaleTypeSelect">音阶类型</label>
+                        <select id="scaleTypeSelect" class="selector">
+                            <optgroup label="西洋大小调">
+                            <option value="major">自然大调（伊奥尼亚）</option>
+                            <option value="harmonicMajor">和声大调</option>
+                            <option value="melodicMajor">旋律大调</option>
+                            <option value="naturalMinor">自然小调（爱奥尼亚）</option>
+                            <option value="harmonicMinor">和声小调</option>
+                            <option value="melodicMinor">旋律小调</option>
+                        </optgroup>
+                        <optgroup label="中古调式">
+                            <option value="ionian">伊奥尼亚调式</option>
+                            <option value="dorian">多利亚调式</option>
+                            <option value="phrygian">弗里几亚调式</option>
+                            <option value="lydian">利底亚调式</option>
+                            <option value="mixolydian">混合利底亚调式</option>
+                            <option value="aeolian">爱奥尼亚调式</option>
+                            <option value="locrian">洛克利亚调式</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 五声">
+                            <option value="pentatonic_gong">五声宫调式</option>
+                            <option value="pentatonic_shang">五声商调式</option>
+                            <option value="pentatonic_jue">五声角调式</option>
+                            <option value="pentatonic_zhi">五声徵调式</option>
+                            <option value="pentatonic_yu">五声羽调式</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 六声（加清角）">
+                            <option value="hexatonic_qingjiao_gong">六声宫调式（加清角）</option>
+                            <option value="hexatonic_qingjiao_shang">六声商调式（加清角）</option>
+                            <option value="hexatonic_qingjiao_jue">六声角调式（加清角）</option>
+                            <option value="hexatonic_qingjiao_zhi">六声徵调式（加清角）</option>
+                            <option value="hexatonic_qingjiao_yu">六声羽调式（加清角）</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 六声（加变宫）">
+                            <option value="hexatonic_biangong_gong">六声宫调式（加变宫）</option>
+                            <option value="hexatonic_biangong_shang">六声商调式（加变宫）</option>
+                            <option value="hexatonic_biangong_jue">六声角调式（加变宫）</option>
+                            <option value="hexatonic_biangong_zhi">六声徵调式（加变宫）</option>
+                            <option value="hexatonic_biangong_yu">六声羽调式（加变宫）</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 七声清乐">
+                            <option value="qingle_gong">七声清乐宫调式</option>
+                            <option value="qingle_shang">七声清乐商调式</option>
+                            <option value="qingle_jue">七声清乐角调式</option>
+                            <option value="qingle_zhi">七声清乐徵调式</option>
+                            <option value="qingle_yu">七声清乐羽调式</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 七声雅乐">
+                            <option value="yayue_gong">七声雅乐宫调式</option>
+                            <option value="yayue_shang">七声雅乐商调式</option>
+                            <option value="yayue_jue">七声雅乐角调式</option>
+                            <option value="yayue_zhi">七声雅乐徵调式</option>
+                            <option value="yayue_yu">七声雅乐羽调式</option>
+                        </optgroup>
+                        <optgroup label="民族调式 - 七声燕乐">
+                            <option value="yanyue_gong">七声燕乐宫调式</option>
+                            <option value="yanyue_shang">七声燕乐商调式</option>
+                            <option value="yanyue_jue">七声燕乐角调式</option>
+                            <option value="yanyue_zhi">七声燕乐徵调式</option>
+                            <option value="yanyue_yu">七声燕乐羽调式</option>
+                        </optgroup>
+                    </select>
+                </div>
+                            
+                            <button id="generateScaleBtn" class="search-btn">
+                                <span class="btn-text">生成音阶</span>
+                                <span class="loading-spinner" style="display: none;"></span>
+                            </button>
+                        </div>
+                        <div class="search-tips">
+                            <p>选择主音和音阶类型，系统将生成精确的音阶音符序列。对于等音调式（如C#/Db），会同时显示两种表示方法。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="input-search">
+                        <div class="search-box">
+                            <input type="text" id="scaleInput" class="search-input" placeholder="输入音阶名称，如：C大调音阶、A和声小调、D多利亚调式...">
+                            <button id="scaleSearchBtn" class="search-btn">
+                                <span class="btn-text">搜索音阶</span>
+                                <span class="loading-spinner" style="display: none;"></span>
+                            </button>
+                        </div>
+                        <div class="search-tips">
+                            <p>支持中文音阶名称查询，如：C大调音阶、A和声小调、D多利亚调式、E旋律大调等</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="notes-analysis">
+                        <div class="notes-input-container">
+                            <div class="notes-input-box">
+                                <input type="text" id="scaleNotesInput" class="search-input" placeholder="输入音符序列，如：C D E F G A B 或 C Eb G Bb">
+                                <button id="analyzeScaleBtn" class="search-btn">
+                                    <span class="btn-text">分析音阶</span>
+                                    <span class="loading-spinner" style="display: none;"></span>
+                                </button>
+                            </div>
+                            <div class="quick-notes">
+                                <span class="notes-label">快速输入:</span>
+                                <button class="note-btn" data-note="C">C</button>
+                                <button class="note-btn" data-note="D">D</button>
+                                <button class="note-btn" data-note="E">E</button>
+                                <button class="note-btn" data-note="F">F</button>
+                                <button class="note-btn" data-note="G">G</button>
+                                <button class="note-btn" data-note="A">A</button>
+                                <button class="note-btn" data-note="B">B</button>
+                                <button class="note-btn" data-note="#">#</button>
+                                <button class="note-btn" data-note="b">b</button>
+                                <button class="note-btn" data-note=" ">空格</button>
+                            </div>
+                        </div>
+                        <div class="search-tips">
+                            <p>输入音符序列，系统将分析可能的音阶类型，如：C D E F G A B 可能为 C自然大调音阶</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="circle-of-fifths">
+                        <div class="circle-of-fifths-container">
+                            <div class="circle-diagram">
+                                <div class="circle-center">C</div>
+                                <div class="circle-note sharp" data-note="G">G</div>
+                                <div class="circle-note sharp" data-note="D">D</div>
+                                <div class="circle-note sharp" data-note="A">A</div>
+                                <div class="circle-note sharp" data-note="E">E</div>
+                                <div class="circle-note sharp" data-note="B">B</div>
+                                <div class="circle-note sharp" data-note="F#">F#</div>
+                                <div class="circle-note sharp" data-note="C#">C#</div>
+                                <div class="circle-note flat" data-note="F">F</div>
+                                <div class="circle-note flat" data-note="Bb">Bb</div>
+                                <div class="circle-note flat" data-note="Eb">Eb</div>
+                                <div class="circle-note flat" data-note="Ab">Ab</div>
+                                <div class="circle-note flat" data-note="Db">Db</div>
+                                <div class="circle-note flat" data-note="Gb">Gb</div>
+                                <div class="circle-note flat" data-note="Cb">Cb</div>
+                            </div>
+                            <div class="circle-controls">
+                                <div class="selector-group">
+                                    <label for="circleScaleType">音阶类型</label>
+                                    <select id="circleScaleType" class="selector">
+                                        <option value="major">大调音阶</option>
+                                        <option value="naturalMinor">小调音阶</option>
+                                    </select>
+                                </div>
+                                <div class="circle-info">
+                                    <h4>五度圈说明</h4>
+                                    <p>顺时针方向：升号增加（G→D→A→E→B→F#→C#）</p>
+                                    <p>逆时针方向：降号增加（F→Bb→Eb→Ab→Db→Gb→Cb）</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-tips">
+                            <p>点击五度圈上的音符，系统将生成对应调性的音阶。五度圈显示了调性之间的音程关系。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="results-section">
+                <h2 class="section-title">搜索结果</h2>
+                <div id="resultsContainer" class="results-container">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">🎵</div>
+                        <h3>音阶查找工具</h3>
+                        <p>选择搜索方式，系统将生成精确的音阶音符序列或分析音阶类型</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 艺考乐理知识库 | 音阶查找工具</p>
+        </footer>
+    </div>
+
+    <!-- 引入音阶生成器 -->
+    <script src="scaleGenerator.js"></script>
+    <script src="scaleApp.js"></script>
+</body>
+</html>
