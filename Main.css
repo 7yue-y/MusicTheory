@@ -118,7 +118,7 @@ body {
 }
 
 /* 移动设备导航列表激活状态 */
-.nav-list.active {
+.nav-list.nav-active {
     display: flex !important;
     flex-direction: column;
     position: absolute;
@@ -130,19 +130,19 @@ body {
     z-index: 1001;
 }
 
-.nav-list.active li {
+.nav-list.nav-active li {
     width: 100%;
     text-align: center;
 }
 
-.nav-list.active li a {
+.nav-list.nav-active li a {
     display: block;
     padding: 12px 15px;
     border-radius: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-list.active li a:hover {
+.nav-list.nav-active li a:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
