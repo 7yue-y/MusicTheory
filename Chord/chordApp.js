@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     navLinks.forEach(link => {
         const linkPage = link.getAttribute('href');
-        if (linkPage === currentPage || (currentPage === 'chord.html' && linkPage === 'chord.html')) {
+        // 更精确的匹配逻辑
+        if (linkPage === currentPage || 
+            (currentPage === 'chord.html' && linkPage.endsWith('chord.html')) ||
+            (currentPage === '' && linkPage === '../index.html')) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');

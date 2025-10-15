@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     navLinks.forEach(link => {
         const linkPage = link.getAttribute('href');
-        if (linkPage === currentPage || (currentPage === 'scale.html' && linkPage === 'scale.html')) {
+        // 更精确的匹配逻辑
+        if (linkPage === currentPage || 
+            (currentPage === 'scale.html' && linkPage.endsWith('scale.html')) ||
+            (currentPage === '' && linkPage === '../index.html')) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');

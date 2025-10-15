@@ -51,6 +51,46 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* 和弦音符横向显示样式 - 使用导航栏颜色 */
+        .chord-notes {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+        
+        .note-item {
+            background: #4a7694; /* 导航栏深蓝色 */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 40px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .chord-notes-small {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        
+        .note-item-small {
+            background: #4a7694; /* 导航栏深蓝色 */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐理知识库 - 关于</title>
+    <link rel="stylesheet" href="../Main.css">
+    <style>
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .about-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .about-section h3 {
+            color: #4a7694;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 8px;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .tech-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 4px solid #4a7694;
+        }
+        
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a7694, #5a86a4);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .version-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <h1 class="logo">🎼 乐理知识库</h1>
+                    <p class="tagline">关于 - 音乐理论学习工具</p>
+                </div>
+                
+                <!-- 响应式导航栏 -->
+                <nav class="navbar">
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="../index.html">主页</a></li>
+                        <li><a href="../Scale/scale.html">音阶查找</a></li>
+                        <li><a href="../Chord/chord.html">和弦查找</a></li>
+                        <li><a href="../Theory/theory.html">其他乐理查找</a></li>
+                        <li><a href="../Practice/Practice.html">视唱练耳中心</a></li>
+                        <li><a href="about.html" class="active">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <section class="page-intro">
+                <h2>关于乐理知识库</h2>
+                <p>一个功能完整的音乐理论学习工具，专为音乐学习者设计</p>
+            </section>
+            
+            <section class="about-content">
+                <div class="about-section">
+                    <h3>🎵 项目简介</h3>
+                    <p>乐理知识库是一个基于Web的音乐理论学习辅助工具，旨在帮助音乐学习者、教学者和音乐爱好者快速理解和掌握音乐理论知识。通过直观的界面和强大的查询功能，让音乐学习变得更加简单和有趣。</p>
+                    
+                    <div class="version-info">
+                        <strong>当前版本：</strong> (测试版)V0.1.0<br>
+                        <strong>最后更新：</strong> 2025.10.15<br>
+                        <strong>当前未解决问题：</strong>
+                                调式音阶查找中，民族调式除了宫调式以外结果错误，待修复算法逻辑；
+                                视唱练耳中心听力训练部分暂未开发完成
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h3>✨ 主要功能</h3>
+                    <ul class="feature-list">
+                        <li>🎶 <strong>和弦查找</strong> - 支持按名称和音符分析和弦</li>
+                        <li>🎹 <strong>音阶查询</strong> - 多种音阶类型查询和显示</li>
+                        <li>📚 <strong>乐理知识</strong> - 基础音乐理论查询</li>
+                        <li>🎧 <strong>视唱练耳</strong> - 音乐听力训练工具</li>
+                        <li>📱 <strong>响应式设计</strong> - 完美适配桌面和移动设备</li>
+                        <li>🔍 <strong>智能分析</strong> - 精确的音程计算和和弦识别</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h3>🛠️ 技术栈</h3>
+                    <div class="tech-stack">
+                        <div class="tech-item">
+                            <strong>前端技术</strong><br>
+                            HTML5, CSS3, JavaScript
+                        </div>
+                        <div class="tech-item">
+                            <strong>样式设计</strong><br>
+                            自定义CSS，响应式布局
+                        </div>
+                        <div class="tech-item">
+                            <strong>架构设计</strong><br>
+                            模块化JavaScript，OOP
+                        </div>
+                        <div class="tech-item">
+                            <strong>兼容性</strong><br>
+                            现代浏览器支持
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h3>🎯 设计理念</h3>
+                    <p>本项目遵循以下设计原则：</p>
+                    <ul class="feature-list">
+                        <li><strong>用户友好</strong> - 直观的界面和简单的操作流程</li>
+                        <li><strong>教育价值</strong> - 专注于音乐学习者的实际需求</li>
+                        <li><strong>技术准确</strong> - 精确的音乐理论计算和算法</li>
+                        <li><strong>跨平台</strong> - 在各种设备上提供一致的用户体验</li>
+                        <li><strong>持续改进</strong> - 根据用户反馈不断优化功能</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h3>📖 使用说明</h3>
+                    <p>使用本工具非常简单：</p>
+                    <ol>
+                        <li>打开主页，选择需要的功能模块</li>
+                        <li>在和弦查找中，可以按名称搜索或输入音符分析</li>
+                        <li>在音阶查找中，查询各种音阶的构成</li>
+                        <li>在乐理知识中，学习基础音乐理论</li>
+                        <li>在视唱练耳中，进行音乐听力训练</li>
+                    </ol>
+                    <!-- <p>所有功能都支持中英文输入，适合不同语言习惯的用户。</p> -->
+                </div>
+                
+                <div class="contact-info">
+                    <h3>📞 联系与反馈</h3>
+                    <p>如果您在使用过程中遇到任何问题，或者有改进建议，欢迎通过以下方式反馈：</p>
+                    <p>📧 邮箱：1665663734@qq.com</p>
+                    <p>💬 微信：qiyue_0602</p>
+                    <p>👥 QQ：</p>
+            <!--    <p>🐛 问题报告：请提交到项目仓库的Issue页面</p>   -->
+                    <p>💡 建议：我们非常重视您的使用体验和反馈！</p>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2025 艺考乐理知识库 | 关于页面</p>
+        </footer>
+    </div>
+
+    <!-- 引入关于页面脚本 -->
+    <script src="aboutApp.js"></script>
+</body>
+</html>

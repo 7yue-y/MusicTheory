@@ -4,14 +4,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('.navbar');
     const navList = document.querySelector('.nav-list');
     const navToggle = document.querySelector('.nav-toggle');
+    
+    // 导航栏激活状态处理
+    const currentPage = window.location.pathname.split('/').pop() || 'theory.html';
     const navLinks = document.querySelectorAll('.nav-list a');
     
-    // 设置当前页面激活状态
-    const currentPage = window.location.pathname.split('/').pop();
     navLinks.forEach(link => {
-        const linkPage = link.getAttribute('href').split('/').pop();
-        if (linkPage === currentPage) {
+        const linkPage = link.getAttribute('href');
+        // 更精确的匹配逻辑
+        if (linkPage === currentPage || 
+            (currentPage === 'theory.html' && linkPage.endsWith('theory.html')) ||
+            (currentPage === '' && linkPage === '../index.html')) {
             link.classList.add('active');
+        } else {
+            link.classList.remove('active');
         }
     });
     

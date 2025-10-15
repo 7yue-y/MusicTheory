@@ -70,151 +70,227 @@ class ChordGenerator {
         // 音符字母顺序
         this.noteSteps = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
         
-        // 定义和弦结构（使用音程）- 重构版本
-        this.chordPatterns = {
-            // 三和弦
-            'major': { 
-                name: '大三和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('maj', 3),
-                    new this.Interval('per', 5)
-                ], 
-                aliases: ['', 'maj', 'M'],
-                englishName: 'Major',
-                symbol: ''
-            },
-            'minor': { 
-                name: '小三和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('per', 5)
-                ], 
-                aliases: ['m', 'min', '-'],
-                englishName: 'Minor',
-                symbol: 'm'
-            },
-            'augmented': { 
-                name: '增三和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('maj', 3),
-                    new this.Interval('aug', 5)
-                ], 
-                aliases: ['aug', '+', '+5'],
-                englishName: 'Augmented',
-                symbol: 'aug'
-            },
-            'diminished': { 
-                name: '减三和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('dim', 5)
-                ], 
-                aliases: ['dim', '°'],
-                englishName: 'Diminished',
-                symbol: 'dim'
-            },
-            'sus2': { 
-                name: '挂二和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('maj', 2),
-                    new this.Interval('per', 5)
-                ], 
-                aliases: ['sus2'],
-                englishName: 'Suspended 2nd',
-                symbol: 'sus2'
-            },
-            'sus4': { 
-                name: '挂四和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('per', 4),
-                    new this.Interval('per', 5)
-                ], 
-                aliases: ['sus4'],
-                englishName: 'Suspended 4th',
-                symbol: 'sus4'
-            },
-            
-            // 七和弦
-            'major7': { 
-                name: '大七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('maj', 3),
-                    new this.Interval('per', 5),
-                    new this.Interval('maj', 7)
-                ], 
-                aliases: ['maj7', 'M7', '△7'],
-                englishName: 'Major Seventh',
-                symbol: 'maj7'
-            },
-            'dominant7': { 
-                name: '属七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('maj', 3),
-                    new this.Interval('per', 5),
-                    new this.Interval('min', 7)
-                ], 
-                aliases: ['7', 'dom7'],
-                englishName: 'Dominant Seventh',
-                symbol: '7'
-            },
-            'minor7': { 
-                name: '小七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('per', 5),
-                    new this.Interval('min', 7)
-                ], 
-                aliases: ['m7', 'min7', '-7'],
-                englishName: 'Minor Seventh',
-                symbol: 'm7'
-            },
-            'halfDiminished': { 
-                name: '半减七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('dim', 5),
-                    new this.Interval('min', 7)
-                ], 
-                aliases: ['m7b5', 'ø7'],
-                englishName: 'Half Diminished',
-                symbol: 'm7b5'
-            },
-            'fullyDiminished': { 
-                name: '减七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('dim', 5),
-                    new this.Interval('dim', 7)
-                ], 
-                aliases: ['dim7', '°7'],
-                englishName: 'Fully Diminished',
-                symbol: 'dim7'
-            },
-            'minorMajor7': { 
-                name: '小大七和弦', 
-                intervals: [
-                    new this.Interval('per', 1),
-                    new this.Interval('min', 3),
-                    new this.Interval('per', 5),
-                    new this.Interval('maj', 7)
-                ], 
-                aliases: ['mM7', 'm(maj7)'],
-                englishName: 'Minor Major Seventh',
-                symbol: 'mM7'
-            }
+// 在 chordGenerator.js 中更新和弦定义
+// 定义和弦结构（使用音程）- 修正版本
+// chordGenerator.js - 完全重写音程计算逻辑
+// 音程类 - 重新实现
+this.Interval = class {
+    constructor(intervalType, intervalNum) {
+        this.intervalType = intervalType; // 'maj', 'min', 'per', 'aug', 'dim'
+        this.intervalNum = intervalNum; // 1,2,3,4,5,6,7
+    }
+    
+    getSemitones() {
+        // 基础半音数（大音程/纯音程）
+        const baseSemitones = {
+            1: 0,   // 纯一度
+            2: 2,   // 大二度
+            3: 4,   // 大三度
+            4: 5,   // 纯四度
+            5: 7,   // 纯五度
+            6: 9,   // 大六度
+            7: 11,  // 大七度
+            8: 12   // 纯八度
         };
         
+        // 音程类型调整
+        const adjustments = {
+            'per': 0,   // 纯音程不变
+            'maj': 0,   // 大音程不变
+            'min': -1,  // 小音程减1个半音
+            'aug': 1,   // 增音程加1个半音
+            'dim': -1   // 减音程减1个半音
+        };
+        
+        // 特殊处理减七度
+        if (this.intervalNum === 7 && this.intervalType === 'dim') {
+            return 9; // 减七度是9个半音（比小七度少1个半音）
+        }
+        
+        // 特殊处理增四度/减五度
+        if (this.intervalNum === 4 && this.intervalType === 'aug') {
+            return 6; // 增四度是6个半音
+        }
+        if (this.intervalNum === 5 && this.intervalType === 'dim') {
+            return 6; // 减五度是6个半音
+        }
+        
+        return baseSemitones[this.intervalNum] + adjustments[this.intervalType];
+    }
+};
+
+// 更新和弦定义，确保音程正确
+this.chordPatterns = {
+    // 三和弦
+    'major': { 
+        name: '大三和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('maj', 3),
+            new this.Interval('per', 5)
+        ], 
+        aliases: ['', 'maj', 'M'],
+        englishName: 'Major',
+        symbol: ''
+    },
+    'minor': { 
+        name: '小三和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('per', 5)
+        ], 
+        aliases: ['m', 'min', '-'],
+        englishName: 'Minor',
+        symbol: 'm'
+    },
+    'augmented': { 
+        name: '增三和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('maj', 3),
+            new this.Interval('aug', 5)
+        ], 
+        aliases: ['aug', '+', '+5'],
+        englishName: 'Augmented',
+        symbol: 'aug'
+    },
+    'diminished': { 
+        name: '减三和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('dim', 5)
+        ], 
+        aliases: ['dim', '°'],
+        englishName: 'Diminished',
+        symbol: 'dim'
+    },
+    'sus2': { 
+        name: '挂二和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('maj', 2),
+            new this.Interval('per', 5)
+        ], 
+        aliases: ['sus2'],
+        englishName: 'Suspended 2nd',
+        symbol: 'sus2'
+    },
+    'sus4': { 
+        name: '挂四和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('per', 4),
+            new this.Interval('per', 5)
+        ], 
+        aliases: ['sus4'],
+        englishName: 'Suspended 4th',
+        symbol: 'sus4'
+    },
+    
+    // 七和弦
+    'major7': { 
+        name: '大七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('maj', 3),
+            new this.Interval('per', 5),
+            new this.Interval('maj', 7)  // 大七度
+        ], 
+        aliases: ['maj7', 'M7', '△7'],
+        englishName: 'Major Seventh',
+        symbol: 'maj7'
+    },
+    'dominant7': { 
+        name: '属七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('maj', 3),
+            new this.Interval('per', 5),
+            new this.Interval('min', 7)  // 小七度
+        ], 
+        aliases: ['7', 'dom7'],
+        englishName: 'Dominant Seventh',
+        symbol: '7'
+    },
+    'minor7': { 
+        name: '小七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('per', 5),
+            new this.Interval('min', 7)  // 小七度
+        ], 
+        aliases: ['m7', 'min7', '-7'],
+        englishName: 'Minor Seventh',
+        symbol: 'm7'
+    },
+    'halfDiminished': { 
+        name: '半减七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('dim', 5),  // 减五度
+            new this.Interval('min', 7)   // 小七度
+        ], 
+        aliases: ['m7b5', 'ø7'],
+        englishName: 'Half Diminished',
+        symbol: 'm7b5'
+    },
+    'fullyDiminished': { 
+        name: '减七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('dim', 5),  // 减五度
+            new this.Interval('dim', 7)   // 减七度
+        ], 
+        aliases: ['dim7', '°7'],
+        englishName: 'Fully Diminished',
+        symbol: 'dim7'
+    },
+    'minorMajor7': { 
+        name: '小大七和弦', 
+        intervals: [
+            new this.Interval('per', 1),
+            new this.Interval('min', 3),
+            new this.Interval('per', 5),
+            new this.Interval('maj', 7)  // 大七度
+        ], 
+        aliases: ['mM7', 'm(maj7)'],
+        englishName: 'Minor Major Seventh',
+        symbol: 'mM7'
+    }
+};
+// 更新音程类的getSemitones方法，确保减七度计算正确
+this.Interval = class {
+    constructor(intervalType, intervalNum) {
+        this.intervalType = intervalType; // 'maj', 'min', 'per', 'aug', 'dim'
+        this.intervalNum = intervalNum; // 1,2,3,4,5,6,7
+    }
+    
+    getSemitones() {
+        const baseSemitones = {
+            1: 0, 2: 2, 3: 4, 4: 5, 5: 7, 6: 9, 7: 11, 8: 12
+        };
+        
+        const typeAdjustment = {
+            'per': 0,
+            'min': -1,
+            'maj': 0,
+            'dim': -1,
+            'aug': 1
+        };
+        
+        // 特殊处理减七度
+        if (this.intervalNum === 7 && this.intervalType === 'dim') {
+            return 9; // 减七度是9个半音
+        }
+        
+        return baseSemitones[this.intervalNum] + typeAdjustment[this.intervalType];
+    }
+};        
         // 和弦性质描述
         this.chordCharacteristics = {
             'major': '明亮、稳定，是音乐中最基础的和弦',
@@ -419,81 +495,90 @@ class ChordGenerator {
     }
     
     // 通过音级音符分析和弦（以根音为基础）
-    analyzeChordByNoteDegrees(rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr) {
-        try {
-            // 验证输入
-            if (!rootNoteStr || !thirdNoteStr || !fifthNoteStr) {
-                return { error: "请至少输入根音、三音和五音" };
-            }
-
-            // 转换音符为Note对象
-            const rootNote = this.Note.fromString(rootNoteStr);
-            const thirdNote = this.Note.fromString(thirdNoteStr);
-            const fifthNote = this.Note.fromString(fifthNoteStr);
-            const seventhNote = seventhNoteStr ? this.Note.fromString(seventhNoteStr) : null;
-
-            // 计算相对于根音的音程
-            const intervals = [0]; // 根音自身
-            
-            // 计算三音相对于根音的音程（半音数）
-            let thirdInterval = thirdNote.getSemitones() - rootNote.getSemitones();
-            if (thirdInterval < 0) thirdInterval += 12;
-            intervals.push(thirdInterval);
-            
-            // 计算五音相对于根音的音程
-            let fifthInterval = fifthNote.getSemitones() - rootNote.getSemitones();
-            if (fifthInterval < 0) fifthInterval += 12;
-            intervals.push(fifthInterval);
-            
-            // 如果有七音，计算七音相对于根音的音程
-            if (seventhNote) {
-                let seventhInterval = seventhNote.getSemitones() - rootNote.getSemitones();
-                if (seventhInterval < 0) seventhInterval += 12;
-                intervals.push(seventhInterval);
-            }
-            
-            // 排序音程以便比较
-            intervals.sort((a, b) => a - b);
-            
-            // 查找匹配的和弦类型
-            const possibleChords = [];
-            
-            for (const [type, info] of Object.entries(this.chordPatterns)) {
-                const chordIntervals = info.intervals.map(interval => interval.getSemitones()).sort((a, b) => a - b);
-                
-                // 检查音程是否匹配
-                if (this.arraysEqual(intervals, chordIntervals)) {
-                    const rootNoteStr = rootNote.toString();
-                    const chordNotes = this.calculateChordNotes(rootNote, info.intervals);
-                    
-                    possibleChords.push({
-                        name: `${rootNoteStr}${info.name}`,
-                        root: rootNoteStr,
-                        type: type,
-                        notes: chordNotes,
-                        chineseName: info.name,
-                        englishName: info.englishName,
-                        symbolName: info.symbol ? `${rootNoteStr}${info.symbol}` : rootNoteStr,
-                        characteristic: this.chordCharacteristics[type] || '无特殊描述',
-                        usage: this.chordUsages[type] || '通用',
-                        matchScore: 100 // 完全匹配
-                    });
-                }
-            }
-            
-            if (possibleChords.length === 0) {
-                return { error: "无法识别此音符序列构成的和弦" };
-            }
-            
-            return {
-                inputNotes: [rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr].filter(Boolean),
-                possibleChords: possibleChords
-            };
-        } catch (error) {
-            return { error: `分析和弦时出错: ${error.message}` };
+analyzeChordByNoteDegrees(rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr) {
+    try {
+        // 验证输入
+        if (!rootNoteStr || !thirdNoteStr || !fifthNoteStr) {
+            return { error: "请至少输入根音、三音和五音" };
         }
+
+        // 转换音符为Note对象
+        const rootNote = this.Note.fromString(rootNoteStr);
+        const thirdNote = this.Note.fromString(thirdNoteStr);
+        const fifthNote = this.Note.fromString(fifthNoteStr);
+        const seventhNote = seventhNoteStr ? this.Note.fromString(seventhNoteStr) : null;
+
+        // 计算相对于根音的音程
+        const intervals = [0]; // 根音自身
+        
+        // 计算三音相对于根音的音程（半音数）
+        let thirdInterval = thirdNote.getSemitones() - rootNote.getSemitones();
+        if (thirdInterval < 0) thirdInterval += 12;
+        intervals.push(thirdInterval);
+        
+        // 计算五音相对于根音的音程
+        let fifthInterval = fifthNote.getSemitones() - rootNote.getSemitones();
+        if (fifthInterval < 0) fifthInterval += 12;
+        intervals.push(fifthInterval);
+        
+        // 如果有七音，计算七音相对于根音的音程
+        if (seventhNote) {
+            let seventhInterval = seventhNote.getSemitones() - rootNote.getSemitones();
+            if (seventhInterval < 0) seventhInterval += 12;
+            intervals.push(seventhInterval);
+        }
+        
+        // 排序音程以便比较
+        intervals.sort((a, b) => a - b);
+        
+        console.log("计算得到的音程:", intervals);
+        
+        // 查找匹配的和弦类型
+        const possibleChords = [];
+        
+        for (const [type, info] of Object.entries(this.chordPatterns)) {
+            const chordIntervals = info.intervals.map(interval => {
+                const semitones = interval.getSemitones();
+                console.log(`和弦 ${type} 的音程 ${interval.intervalType} ${interval.intervalNum}: ${semitones} 半音`);
+                return semitones;
+            }).sort((a, b) => a - b);
+            
+            console.log(`和弦 ${type} 的音程组合:`, chordIntervals);
+            
+            // 检查音程是否匹配
+            if (this.arraysEqual(intervals, chordIntervals)) {
+                const rootNoteStr = rootNote.toString();
+                const chordNotes = this.calculateChordNotes(rootNote, info.intervals);
+                
+                possibleChords.push({
+                    name: `${rootNoteStr}${info.name}`,
+                    root: rootNoteStr,
+                    type: type,
+                    notes: chordNotes,
+                    chineseName: info.name,
+                    englishName: info.englishName,
+                    symbolName: info.symbol ? `${rootNoteStr}${info.symbol}` : rootNoteStr,
+                    characteristic: this.chordCharacteristics[type] || '无特殊描述',
+                    usage: this.chordUsages[type] || '通用',
+                    matchScore: 100 // 完全匹配
+                });
+                
+                console.log(`匹配到和弦: ${type}`);
+            }
+        }
+        
+        if (possibleChords.length === 0) {
+            return { error: "无法识别此音符序列构成的和弦" };
+        }
+        
+        return {
+            inputNotes: [rootNoteStr, thirdNoteStr, fifthNoteStr, seventhNoteStr].filter(Boolean),
+            possibleChords: possibleChords
+        };
+    } catch (error) {
+        return { error: `分析和弦时出错: ${error.message}` };
     }
-    
+}    
     // 辅助方法：比较两个数组是否相等
     arraysEqual(arr1, arr2) {
         if (arr1.length !== arr2.length) return false;
