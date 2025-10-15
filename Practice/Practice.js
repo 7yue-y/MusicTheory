@@ -78,13 +78,16 @@ function createMIDIEditor() {
     editorGrid.innerHTML = '';
     noteLabels.innerHTML = '';
     
-    // 创建音高标签 (从C4到C5，一个八度，从低到高)
-    const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5'];
+    // 创建音高标签 (从A3到C5，共15个音符，从低到高)
+    const notes = [
+        'A3', 'A#3', 'B3',
+        'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5'
+    ];
     
-    // 创建时间轴 (4小节 * 4拍 = 16个时间单位)
-    const timeUnits = 16;
+    // 创建时间轴 (6小节 * 4拍 = 24个时间单位)
+    const timeUnits = 24;
     
-    // 添加音高标签（从低到高，所以C4在最下面，C5在最上面）
+    // 添加音高标签（从低到高，所以A3在最下面，C5在最上面）
     notes.forEach(note => {
         const label = document.createElement('div');
         label.className = 'note-label';
@@ -94,8 +97,8 @@ function createMIDIEditor() {
     });
     
     // 添加网格单元格（从低到高排列）
-    // 使用grid-template-rows: repeat(13, 1fr)来创建13行
-    // 每行对应一个音符，从C4到C5
+    // 使用grid-template-rows: repeat(16, 1fr)来创建16行
+    // 每行对应一个音符，从A3到C5
     for (let i = 0; i < notes.length; i++) {
         for (let j = 0; j < timeUnits; j++) {
             const cell = document.createElement('div');
@@ -133,7 +136,7 @@ function addNoteToEditor(note) {
     let time = 0;
     if (editorNotes.length > 0) {
         time = Math.max(...editorNotes.map(n => n.time)) + 1;
-        if (time >= 16) time = 0; // 循环
+        if (time >= 24) time = 0; // 循环
     }
     
     // 添加到编辑器
@@ -148,15 +151,32 @@ function addNoteToEditor(note) {
     }
 }
 
+// 初始化钢琴音源
+function initPianoSound() {
+    // 使用更真实的钢琴音色
+    synth = new Tone.Sampler({
+        urls: {
+            "C4": "C4.mp3",
+            "D#4": "Ds4.mp3", 
+            "F#4": "Fs4.mp3",
+            "A4": "A4.mp3",
+        },
+        baseUrl: "https://tonejs.github.io/audio/salamander/",
+        onload: () => {
+            console.log("钢琴音源加载完成");
+        }
+    }).toDestination();
+}
+
 // 播放音符
 function playNote(note) {
     if (!synth) {
-        synth = new Tone.Synth().toDestination();
+        initPianoSound();
     }
     
     // 将音符转换为频率
     const frequency = Tone.Frequency(note).toFrequency();
-    synth.triggerAttackRelease(frequency, "8n");
+    synth.triggerAttackRelease(note, "8n");
     
     // 更新显示
     const noteDisplay = document.getElementById('currentNote');
@@ -198,7 +218,7 @@ function playEditorNotes() {
             });
             
             // 更新进度条
-            const progress = (noteData.time / 16) * 100;
+            const progress = (noteData.time / 24) * 100;
             document.getElementById('progress').style.width = progress + '%';
             
             // 如果是最后一个音符，更新状态
@@ -366,37 +386,55 @@ function loadPreset() {
         presetNotes = [
             {note: 'C4', time: 0}, {note: 'D4', time: 1}, {note: 'E4', time: 2}, 
             {note: 'F4', time: 3}, {note: 'G4', time: 4}, {note: 'A4', time: 5}, 
-            {note: 'B4', time: 6}, {note: 'C5', time: 7}
+            {note: 'B4', time: 6}, {note: 'C5', time: 7},
+            {note: 'D5', time: 8}, {note: 'E5', time: 9}, {note: 'F#4', time: 10}, 
+            {note: 'G#4', time: 11}, {note: 'A5', time: 12}, {note: 'B5', time: 13}, 
+            {note: 'C6', time: 14}
         ];
     } else if (currentPreset === 'C旋律大调(下行)') {
         presetNotes = [
-            {note: 'C5', time: 0}, {note: 'B4', time: 1}, {note: 'A4', time: 2}, 
-            {note: 'G4', time: 3}, {note: 'F4', time: 4}, {note: 'E4', time: 5}, 
-            {note: 'D4', time: 6}, {note: 'C4', time: 7}
+            {note: 'C6', time: 0}, {note: 'B5', time: 1}, {note: 'A5', time: 2}, 
+            {note: 'G4', time: 3}, {note: 'F4', time: 4}, {note: 'E5', time: 5}, 
+            {note: 'D5', time: 6}, {note: 'C5', time: 7},
+            {note: 'B4', time: 8}, {note: 'A4', time: 9}, {note: 'G4', time: 10}, 
+            {note: 'F4', time: 11}, {note: 'E4', time: 12}, {note: 'D4', time: 13}, 
+            {note: 'C4', time: 14}
         ];
     } else if (currentPreset === 'a自然小调') {
         presetNotes = [
-            {note: 'A4', time: 0}, {note: 'B4', time: 1}, {note: 'C5', time: 2}, 
+            {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F4', time: 5}, 
-            {note: 'G4', time: 6}, {note: 'A4', time: 7}
+            {note: 'G4', time: 6}, {note: 'A4', time: 7},
+            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
+            {note: 'E5', time: 11}, {note: 'F5', time: 12}, {note: 'G5', time: 13}, 
+            {note: 'A5', time: 14}
         ];
     } else if (currentPreset === 'a和声小调') {
         presetNotes = [
-            {note: 'A4', time: 0}, {note: 'B4', time: 1}, {note: 'C5', time: 2}, 
+            {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F4', time: 5}, 
-            {note: 'G#4', time: 6}, {note: 'A4', time: 7}
+            {note: 'G#4', time: 6}, {note: 'A4', time: 7},
+            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
+            {note: 'E5', time: 11}, {note: 'F5', time: 12}, {note: 'G#5', time: 13}, 
+            {note: 'A5', time: 14}
         ];
     } else if (currentPreset === 'a旋律小调(上行)') {
         presetNotes = [
-            {note: 'A4', time: 0}, {note: 'B4', time: 1}, {note: 'C5', time: 2}, 
+            {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F#4', time: 5}, 
-            {note: 'G#4', time: 6}, {note: 'A4', time: 7}
+            {note: 'G#4', time: 6}, {note: 'A4', time: 7},
+            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
+            {note: 'E5', time: 11}, {note: 'F#5', time: 12}, {note: 'G#5', time: 13}, 
+            {note: 'A5', time: 14}
         ];
     } else if (currentPreset === 'a旋律小调(下行)') {
         presetNotes = [
-            {note: 'A4', time: 0}, {note: 'G4', time: 1}, {note: 'F4', time: 2}, 
-            {note: 'E4', time: 3}, {note: 'D4', time: 4}, {note: 'C5', time: 5}, 
-            {note: 'B4', time: 6}, {note: 'A4', time: 7}
+            {note: 'A5', time: 0}, {note: 'G5', time: 1}, {note: 'F5', time: 2}, 
+            {note: 'E5', time: 3}, {note: 'D5', time: 4}, {note: 'C5', time: 5}, 
+            {note: 'B4', time: 6}, {note: 'A4', time: 7},
+            {note: 'G4', time: 8}, {note: 'F4', time: 9}, {note: 'E4', time: 10}, 
+            {note: 'D4', time: 11}, {note: 'C4', time: 12}, {note: 'B3', time: 13}, 
+            {note: 'A3', time: 14}
         ];
     }
     
@@ -426,8 +464,81 @@ function clearEditor() {
     document.getElementById('status').textContent = '编辑器已清空';
 }
 
+// 导航栏激活状态处理
+function initializeNavigation() {
+    const currentPage = window.location.pathname.split('/').pop() || 'Practice.html';
+    const navLinks = document.querySelectorAll('.nav-list a');
+    
+    navLinks.forEach(link => {
+        const linkPage = link.getAttribute('href');
+        // 精确匹配逻辑，处理各种路径情况
+        if (linkPage === currentPage || 
+            (currentPage === 'Practice.html' && linkPage.endsWith('Practice.html')) ||
+            (currentPage === '' && linkPage === '../index.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+    
+    // 汉堡菜单导航切换功能（适用于所有设备）
+    const navToggle = document.getElementById('navToggle');
+    const navList = document.getElementById('navList');
+    
+    if (navToggle && navList) {
+        navToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navList.classList.toggle('nav-active');
+            
+            // 汉堡菜单动画
+            const hamburgerLines = this.querySelectorAll('.hamburger-line');
+            hamburgerLines.forEach(line => {
+                line.classList.toggle('active');
+            });
+        });
+        
+        // 点击链接后关闭菜单（移动端和桌面端都适用）
+        const navLinks = document.querySelectorAll('.nav-list a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navList.classList.remove('nav-active');
+                const hamburgerLines = navToggle.querySelectorAll('.hamburger-line');
+                hamburgerLines.forEach(line => {
+                    line.classList.remove('active');
+                });
+            });
+        });
+        
+        // 点击其他地方关闭菜单
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target) && !navList.contains(e.target)) {
+                navList.classList.remove('nav-active');
+                const hamburgerLines = navToggle.querySelectorAll('.hamburger-line');
+                hamburgerLines.forEach(line => {
+                    line.classList.remove('active');
+                });
+            }
+        });
+    }
+    
+    // 窗口大小变化时重置导航状态
+    window.addEventListener('resize', function() {
+        // 在窗口大小变化时确保导航菜单关闭
+        if (navList) {
+            navList.classList.remove('nav-active');
+            const hamburgerLines = navToggle?.querySelectorAll('.hamburger-line');
+            hamburgerLines?.forEach(line => {
+                line.classList.remove('active');
+            });
+        }
+    });
+}
+
 // 初始化页面
 document.addEventListener('DOMContentLoaded', () => {
+    // 初始化导航栏
+    initializeNavigation();
+    
     // 创建钢琴键盘
     createPiano('piano', 2);
     
