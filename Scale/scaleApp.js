@@ -49,8 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 获取DOM元素
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
+    const scaleCategorySelect = document.getElementById('scaleCategorySelect');
     const rootNoteSelect = document.getElementById('rootNoteSelect');
     const scaleTypeSelect = document.getElementById('scaleTypeSelect');
+    const folkRootNoteSelect = document.getElementById('folkRootNoteSelect');
+    const folkScaleTypeSelect = document.getElementById('folkScaleTypeSelect');
+    const folkModeSelect = document.getElementById('folkModeSelect');
+    const westernScaleSelector = document.getElementById('westernScaleSelector');
+    const folkScaleSelector = document.getElementById('folkScaleSelector');
     const generateScaleBtn = document.getElementById('generateScaleBtn');
     const scaleInput = document.getElementById('scaleInput');
     const scaleSearchBtn = document.getElementById('scaleSearchBtn');
@@ -80,15 +86,66 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // 调式类别切换
+    function handleScaleCategoryChange() {
+        const category = scaleCategorySelect.value;
+        
+        if (category === 'western') {
+            westernScaleSelector.classList.add('active');
+            folkScaleSelector.classList.remove('active');
+        } else {
+            westernScaleSelector.classList.remove('active');
+            folkScaleSelector.classList.add('active');
+        }
+    }
+    
     // 快速搜索：生成音阶
     function generateScale() {
-        const rootNote = rootNoteSelect.value;
-        const scaleType = scaleTypeSelect.value;
+        const category = scaleCategorySelect.value;
+        let result;
         
         setLoadingState(generateScaleBtn, true);
         
         setTimeout(() => {
-            const result = scaleGenerator.generateScale(rootNote, scaleType);
+            if (category === 'western') {
+                // 西洋/中古调式
+                const rootNote = rootNoteSelect.value;
+                const scaleType = scaleTypeSelect.value;
+                result = scaleGenerator.generateScale(rootNote, scaleType);
+            } else {
+                // 民族调式
+                const rootNote = folkRootNoteSelect.value;
+                const scaleType = folkScaleTypeSelect.value;
+                const mode = folkModeSelect.value;
+                
+                // 构建民族调式的标识符
+                let scaleIdentifier;
+                switch(scaleType) {
+                    case 'pentatonic':
+                        scaleIdentifier = `pentatonic_${mode}`;
+                        break;
+                    case 'hexatonic_qingjiao':
+                        scaleIdentifier = `hexatonic_qingjiao_${mode}`;
+                        break;
+                    case 'hexatonic_biangong':
+                        scaleIdentifier = `hexatonic_biangong_${mode}`;
+                        break;
+                    case 'qingle':
+                        scaleIdentifier = `qingle_${mode}`;
+                        break;
+                    case 'yayue':
+                        scaleIdentifier = `yayue_${mode}`;
+                        break;
+                    case 'yanyue':
+                        scaleIdentifier = `yanyue_${mode}`;
+                        break;
+                    default:
+                        scaleIdentifier = `pentatonic_${mode}`;
+                }
+                
+                result = scaleGenerator.generateScale(rootNote, scaleIdentifier);
+            }
+            
             displayResult(result, 'quick');
             setLoadingState(generateScaleBtn, false);
         }, 300);
@@ -175,7 +232,21 @@ document.addEventListener('DOMContentLoaded', function() {
 function displaySingleScale(result, resultCard, searchType) {
     const description = scaleGenerator.generateScaleDescription(result);
     const lines = description.split('\n');
-    
+
+    // 音级名称定义
+    const westernDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+    // 为民族调式创建一个更详细的映射
+    const folkDegreeMap = {
+        'pentatonic_gong': ['宫', '商', '角', '徵', '羽'],
+        'hexatonic_qingjiao_gong': ['宫', '商', '角', '清角', '徵', '羽'],
+        'hexatonic_biangong_gong': ['宫', '商', '角', '徵', '羽', '变宫'],
+        'qingle_gong': ['宫', '商', '角', '清角', '徵', '羽', '变宫'],
+        'yayue_gong': ['宫', '商', '角', '变徵', '徵', '羽', '变宫'],
+        'yanyue_gong': ['宫', '商', '角', '清角', '徵', '羽', '闰']
+    };
+    const folkBianyinNames = ['清角', '变宫', '变徵', '闰'];
+
+
     let htmlContent = `
         <div class="result-header">
             <div class="result-icon">${result.isFolkScale ? '🎎' : '🎵'}</div>
@@ -186,12 +257,49 @@ function displaySingleScale(result, resultCard, searchType) {
         <div class="result-content">
             <div class="scale-notes">
     `;
-    
-    // 添加音符显示
-    result.notes.forEach(note => {
-        htmlContent += `<div class="note-item">${note}</div>`;
+
+    // 添加音符和音级显示
+    result.notes.forEach((note, index) => {
+        let degree = '';
+        let isBianyin = false;
+
+        if (result.isFolkScale) {
+            // 民族调式音名
+            const gongNote = result.gongNote || result.root;
+            const gongScaleType = scaleGenerator.getGongScaleType(result.type);
+            const gongScale = scaleGenerator.generateFolkScaleDirect(gongNote, gongScaleType);
+            
+            if (!gongScale.error) {
+                const noteIndexInGong = gongScale.notes.indexOf(note);
+                const degreeNames = folkDegreeMap[gongScaleType];
+                
+                if (degreeNames && noteIndexInGong !== -1 && degreeNames[noteIndexInGong]) {
+                    degree = degreeNames[noteIndexInGong];
+                    if (folkBianyinNames.includes(degree)) {
+                        isBianyin = true;
+                    }
+                }
+            }
+        } else {
+            // 西洋调式音级
+            degree = westernDegrees[index];
+        }
+
+        // 格式化音符显示
+        const formattedNote = note
+            .replace('#', '♯')
+            .replace('b', '♭')
+            .replace('×', '♯♯')
+            .replace('bb', '♭♭');
+
+        htmlContent += `
+            <div class="note-item ${isBianyin ? 'bianyin' : ''}">
+                <div class="note-name">${formattedNote}</div>
+                <div class="note-degree">${degree}</div>
+            </div>
+        `;
     });
-    
+
     htmlContent += `
             </div>
             <div class="scale-info">
@@ -335,6 +443,7 @@ function displaySingleScale(result, resultCard, searchType) {
     });
     
     // 事件监听器
+    scaleCategorySelect.addEventListener('change', handleScaleCategoryChange);
     generateScaleBtn.addEventListener('click', generateScale);
     scaleSearchBtn.addEventListener('click', searchScaleByName);
     analyzeScaleBtn.addEventListener('click', analyzeScaleFromNotes);
@@ -352,5 +461,5 @@ function displaySingleScale(result, resultCard, searchType) {
     });
     
     // 初始欢迎信息
-    console.log('音阶查找工具已加载 - 增加五度圈和调式验证');
+    console.log('音阶查找工具已加载 - 增加调式类别切换功能');
 });

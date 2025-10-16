@@ -13,8 +13,13 @@ class ScaleGenerator {
                 this.alter = alter; // -2: 重降, -1: 降, 0: 自然, 1: 升, 2: 重升
             }
             
-            toString() {
-                if (this.alter === 0) return this.step;
+            toString(keySignature = { sharps: [], flats: [] }) {
+                if (this.alter === 0) {
+                    if (keySignature.sharps.includes(this.step) || keySignature.flats.includes(this.step)) {
+                        return this.step + '♮';
+                    }
+                    return this.step;
+                }
                 if (this.alter === 1) return this.step + '#';
                 if (this.alter === -1) return this.step + 'b';
                 if (this.alter === 2) return this.step + '×'; // 重升
@@ -406,7 +411,8 @@ class ScaleGenerator {
             }
             
             // 转换为字符串表示
-            const noteStrings = notes.map(note => note.toString());
+            const keySigNotes = this.getKeySignatureNotes(rootNoteStr, scaleType);
+            const noteStrings = notes.map(note => note.toString(keySigNotes));
             
             return {
                 name: `${rootNoteStr}${this.scaleNames[scaleType]}`,
@@ -427,12 +433,19 @@ class ScaleGenerator {
             
             // 提取调式信息
             const scaleParts = scaleType.split('_');
-            const toneCount = scaleParts[0]; // pentatonic, hexatonic, qingle, yayue, yanyue
-            const modeType = scaleParts[1]; // 调式类型: gong, shang, jue, zhi, yu
-            const bianyinType = scaleParts[2]; // 偏音类型: qingjiao, biangong, 等
+            const toneCount = scaleParts[0];
+            let modeType;
+
+            // 根据调式名称结构确定 modeType
+            if (toneCount === 'hexatonic') {
+                modeType = scaleParts[2]; // e.g., 'shang' in 'hexatonic_qingjiao_shang'
+            } else {
+                modeType = scaleParts[1]; // e.g., 'shang' in 'pentatonic_shang'
+            }
             
-            // 如果是宫调式，直接生成
-            if (modeType === 'gong') {
+            // 如果 modeType 未定义 (例如，对于 'hexatonic_qingjiao_gong' 拆分后 parts[2] 不存在),
+            // 那么它就是一个宫调式。
+            if (!modeType || modeType === 'gong') {
                 return this.generateFolkScaleDirect(rootNoteStr, scaleType);
             }
             
@@ -499,13 +512,23 @@ class ScaleGenerator {
         }
     }
 
+    // 从音符减去音程
+    subtractInterval(note, interval) {
+        const targetSemitones = (note.getSemitones() - interval.getSemitones() + 12) % 12;
+        const targetStepIndex = (this.noteSteps.indexOf(note.step) - (interval.intervalNum - 1) + 7) % 7;
+        const targetStep = this.noteSteps[targetStepIndex];
+        
+        // 找到正确的升降号
+        return this.findNoteBySemitones(targetStep, targetSemitones);
+    }
+
     // 根据调式找到宫音
     findGongNote(rootNote, modeType) {
         const modeToGongInterval = {
-            'shang': new this.Interval('per', 4),   // 商调式：宫音在下方的纯四度
-            'jue': new this.Interval('min', 6),     // 角调式：宫音在下方大三度
-            'zhi': new this.Interval('per', 5),     // 徵调式：宫音在上方纯四度（下方纯五度）
-            'yu': new this.Interval('maj', 6)       // 羽调式：宫音在上方小三度（下方大六度）
+            'shang': new this.Interval('maj', 2),   // 商调式：宫音在下方的大二度
+            'jue': new this.Interval('maj', 3),     // 角调式：宫音在下方的大三度
+            'zhi': new this.Interval('per', 5),     // 徵调式：宫音在下方的纯五度
+            'yu': new this.Interval('maj', 6)       // 羽调式：宫音在下方的大六度
         };
         
         const interval = modeToGongInterval[modeType];
@@ -514,18 +537,23 @@ class ScaleGenerator {
         }
         
         // 计算宫音位置
-        return this.addInterval(rootNote, interval);
+        return this.subtractInterval(rootNote, interval);
     }
 
     // 获取对应的宫调式类型
     getGongScaleType(scaleType) {
         const parts = scaleType.split('_');
-        if (parts[0] === 'pentatonic') {
+        const toneCount = parts[0];
+        
+        if (toneCount === 'pentatonic') {
             return 'pentatonic_gong';
-        } else if (parts[0] === 'hexatonic') {
-            return `hexatonic_${parts[1]}_gong`;
+        } else if (toneCount === 'hexatonic') {
+            // 对于六声调式，格式是 hexatonic_偏音_调式 (e.g., hexatonic_qingjiao_shang)
+            const bianyinType = parts[1];
+            return `hexatonic_${bianyinType}_gong`;
         } else {
-            return `${parts[0]}_gong`;
+            // 对于七声调式，格式是 qingle_调式 (e.g., qingle_shang)
+            return `${toneCount}_gong`;
         }
     }
 
@@ -601,6 +629,27 @@ class ScaleGenerator {
             return `${Math.abs(sharpsOrFlats)}个降号`;
         } else {
             return '无升降号';
+        }
+    }
+
+    // 获取调号中的音符
+    getKeySignatureNotes(rootNote, scaleType) {
+        const keyType = scaleType.includes('minor') ? 'naturalMinor' : 'major';
+        
+        if (!this.circleOfFifths[keyType] || this.circleOfFifths[keyType][rootNote] === undefined) {
+            return { sharps: [], flats: [] };
+        }
+
+        const numAccidentals = this.circleOfFifths[keyType][rootNote];
+        const sharpsOrder = ['F', 'C', 'G', 'D', 'A', 'E', 'B'];
+        const flatsOrder = ['B', 'E', 'A', 'D', 'G', 'C', 'F'];
+
+        if (numAccidentals > 0) {
+            return { sharps: sharpsOrder.slice(0, numAccidentals), flats: [] };
+        } else if (numAccidentals < 0) {
+            return { sharps: [], flats: flatsOrder.slice(0, Math.abs(numAccidentals)) };
+        } else {
+            return { sharps: [], flats: [] };
         }
     }
     

@@ -23,7 +23,7 @@
 
 .selector {
     padding: 12px 15px;
-    border: 2px solid var(--gray-light);
+    border: 2px solid var(--gray-medium);
     border-radius: var(--border-radius);
     font-size: 14px;
     background: white;
@@ -73,6 +73,51 @@
 .note-btn:hover {
     background: var(--primary-color);
     color: white;
+}
+
+/* 新增音符显示样式 */
+.note-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 10px !important;
+    border-radius: var(--border-radius) !important;
+    background: #e9ecef !important;
+    border: 1px solid var(--gray-light) !important;
+    min-width: 60px !important;
+    color: var(--dark-color) !important; /* 确保文字颜色不被覆盖 */
+}
+
+.note-name {
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    color: var(--dark-color) !important;
+}
+
+.note-degree {
+    font-size: 0.9rem !important;
+    color: var(--gray-dark) !important;
+    margin-top: 5px !important;
+}
+
+/* 偏音特殊样式 */
+.note-item.bianyin {
+    background: #fff3cd !important;
+    border-color: #ffeeba !important;
+}
+
+.note-item.bianyin .note-name {
+    color: #856404 !important;
+}
+
+.note-item.bianyin .note-degree {
+    color: #856404 !important;
+    font-weight: bold !important;
+}
+
+/* 居中显示音符 */
+.scale-notes {
+    justify-content: center;
 }
 
 /* 音阶分析结果样式 */
@@ -330,5 +375,88 @@
     
     .chord-header h4 {
         margin-bottom: 5px;
+    }
+}
+
+/* 切换式选择器组样式 */
+.scale-selector-group {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.scale-selector-group.active {
+    display: flex;
+}
+
+.scale-category-selector {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.scale-category-selector .selector-group {
+    min-width: 200px;
+}
+
+.folk-scale-selector {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.folk-scale-selector .selector-group {
+    flex: 1;
+    min-width: 120px;
+}
+
+.western-scale-selector {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.western-scale-selector .selector-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* 切换动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .scale-category-selector .selector-group {
+        min-width: 100%;
+    }
+    
+    .folk-scale-selector {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .folk-scale-selector .selector-group {
+        min-width: 100%;
+    }
+    
+    .western-scale-selector {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .western-scale-selector .selector-group {
+        min-width: 100%;
     }
 }
