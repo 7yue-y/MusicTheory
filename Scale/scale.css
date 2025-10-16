@@ -23,7 +23,7 @@
 
 .selector {
     padding: 12px 15px;
-    border: 2px solid var(--gray-medium);
+    border: 2px solid #b0b0b0; /* 加深边框颜色 */
     border-radius: var(--border-radius);
     font-size: 14px;
     background: white;
@@ -149,6 +149,19 @@
     .quick-notes {
         justify-content: center;
     }
+
+    .note-item {
+        min-width: 50px !important;
+        padding: 8px !important;
+    }
+
+    .note-name {
+        font-size: 1.2rem !important;
+    }
+
+    .note-degree {
+        font-size: 0.8rem !important;
+    }
 }
 
 
@@ -273,6 +286,7 @@
 @media (max-width: 768px) {
     .circle-of-fifths-container {
         flex-direction: column;
+        align-items: center;
     }
     
     .circle-diagram {
@@ -284,6 +298,36 @@
         width: 35px;
         height: 35px;
         font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .note-item {
+        min-width: 40px !important;
+        padding: 5px !important;
+    }
+
+    .note-name {
+        font-size: 1rem !important;
+    }
+
+    .note-degree {
+        font-size: 0.7rem !important;
+    }
+
+    .circle-diagram {
+        width: 220px;
+        height: 220px;
+    }
+
+    .circle-note {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    .selector {
+        padding: 10px 12px;
     }
 }
 
