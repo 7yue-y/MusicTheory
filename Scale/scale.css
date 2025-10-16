@@ -139,7 +139,9 @@
     }
     
     .selector-group {
-        flex: 0 0 100%;
+        flex: 0 1 auto; /* Allow shrinking, basis auto */
+        width: 100%; /* Explicitly set width to 100% */
+        max-width: 100%; /* Ensure it doesn't exceed 100% */
         min-width: auto; /* Reset min-width to avoid potential conflicts */
         box-sizing: border-box; /* Include padding and border in the element's total width */
     }
@@ -529,7 +531,11 @@
     }
     
     .folk-scale-selector .selector-group {
-        min-width: 100%;
+        flex: 0 1 auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: auto;
+        box-sizing: border-box;
     }
     
     .western-scale-selector {
@@ -538,6 +544,10 @@
     }
     
     .western-scale-selector .selector-group {
-        min-width: 100%;
+        flex: 0 1 auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: auto;
+        box-sizing: border-box;
     }
 }
