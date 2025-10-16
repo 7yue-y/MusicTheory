@@ -141,6 +141,7 @@
     .selector-group {
         flex: 0 0 100%;
         min-width: auto; /* Reset min-width to avoid potential conflicts */
+        box-sizing: border-box; /* Include padding and border in the element's total width */
     }
     
     .notes-input-box {
