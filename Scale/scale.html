@@ -224,41 +224,15 @@
                     </div>
                     
                     <div class="tab-content" id="circle-of-fifths">
-                        <div class="circle-of-fifths-container">
-                            <div class="circle-diagram">
-                                <div class="circle-center">C</div>
-                                <div class="circle-note sharp" data-note="G">G</div>
-                                <div class="circle-note sharp" data-note="D">D</div>
-                                <div class="circle-note sharp" data-note="A">A</div>
-                                <div class="circle-note sharp" data-note="E">E</div>
-                                <div class="circle-note sharp" data-note="B">B</div>
-                                <div class="circle-note sharp" data-note="F#">F#</div>
-                                <div class="circle-note sharp" data-note="C#">C#</div>
-                                <div class="circle-note flat" data-note="F">F</div>
-                                <div class="circle-note flat" data-note="Bb">Bb</div>
-                                <div class="circle-note flat" data-note="Eb">Eb</div>
-                                <div class="circle-note flat" data-note="Ab">Ab</div>
-                                <div class="circle-note flat" data-note="Db">Db</div>
-                                <div class="circle-note flat" data-note="Gb">Gb</div>
-                                <div class="circle-note flat" data-note="Cb">Cb</div>
+                        <div class="circle-container">
+                            <div class="circle-of-fifths-diagram">
+                                <!-- JS will populate this -->
                             </div>
-                            <div class="circle-controls">
-                                <div class="selector-group">
-                                    <label for="circleScaleType">音阶类型</label>
-                                    <select id="circleScaleType" class="selector">
-                                        <option value="major">大调音阶</option>
-                                        <option value="naturalMinor">小调音阶</option>
-                                    </select>
-                                </div>
-                                <div class="circle-info">
-                                    <h4>五度圈说明</h4>
-                                    <p>顺时针方向：升号增加（G→D→A→E→B→F#→C#）</p>
-                                    <p>逆时针方向：降号增加（F→Bb→Eb→Ab→Db→Gb→Cb）</p>
-                                </div>
+                            <div class="circle-info-panel">
+                                <h4>五度圈检索</h4>
+                                <p>点击圆盘上的任意调性，即可生成对应的自然大调或自然小调音阶。</p>
+                                <p>外圈为大调，内圈为关系小调。</p>
                             </div>
-                        </div>
-                        <div class="search-tips">
-                            <p>点击五度圈上的音符，系统将生成对应调性的音阶。五度圈显示了调性之间的音程关系。</p>
                         </div>
                     </div>
                 </div>

@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const analyzeScaleBtn = document.getElementById('analyzeScaleBtn');
     const noteButtons = document.querySelectorAll('.note-btn');
     const resultsContainer = document.getElementById('resultsContainer');
-    const circleNotes = document.querySelectorAll('.circle-note');
-    const circleScaleType = document.getElementById('circleScaleType');
-    
+    // 获取五度圈相关DOM元素
+    const circleDiagram = document.querySelector('.circle-of-fifths-diagram');
+
     // 标签页切换
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -83,6 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     content.classList.add('active');
                 }
             });
+
+            // 如果切换到五度圈，则初始化
+            if (tabId === 'circle-of-fifths') {
+                initializeCircleOfFifths();
+            }
         });
     });
     
@@ -186,9 +191,109 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 五度圈检索
-    function generateScaleFromCircle(note, scaleType) {
-        const result = scaleGenerator.generateScale(note, scaleType);
+    function generateScaleFromCircle(rootNote, scaleType, element) {
+        // 移除所有激活状态
+        document.querySelectorAll('.circle-note').forEach(btn => btn.classList.remove('active'));
+        // 添加当前点击的激活状态
+        if (element) {
+            element.classList.add('active');
+        }
+
+        const result = scaleGenerator.generateScale(rootNote, scaleType);
         displayResult(result, 'circle');
+    }
+
+    // 初始化五度圈
+    function initializeCircleOfFifths() {
+        const circleOrder = [
+            { major: 'C', minor: 'A' },
+            { major: 'G', minor: 'E' },
+            { major: 'D', minor: 'B' },
+            { major: 'A', minor: 'F#' },
+            { major: 'E', minor: 'C#' },
+            { major: 'B', minor: 'G#' },
+            { major: 'F#', minor: 'D#' },
+            { major: 'C#', minor: 'A#' },
+            { major: 'Ab', minor: 'F' },
+            { major: 'Eb', minor: 'C' },
+            { major: 'Bb', minor: 'G' },
+            { major: 'F', minor: 'D' }
+        ];
+
+        const diagramSize = 350; // .circle-of-fifths-diagram 的宽度/高度
+        const centerOffset = diagramSize / 2; // 圆心偏移量
+        const radiusOuter = 130; // 外圈音符半径
+        const radiusInner = 80;  // 内圈音符半径
+
+        circleDiagram.innerHTML = ''; // 清空现有内容
+
+        // 添加中心点
+        const centerPoint = document.createElement('div');
+        centerPoint.className = 'circle-center-point';
+        centerPoint.textContent = '五度圈';
+        circleDiagram.appendChild(centerPoint);
+
+        circleOrder.forEach((keyPair, index) => {
+            const angle = (index / 12) * 2 * Math.PI - Math.PI / 2; // 从顶部开始，顺时针
+
+            // 创建外圈大调音符
+            const outerKeyNote = document.createElement('div');
+            outerKeyNote.className = 'key-note outer';
+            outerKeyNote.innerHTML = `<div class="note-main">${keyPair.major}</div><div class="note-minor">大调</div>`;
+            outerKeyNote.setAttribute('data-note', keyPair.major);
+            outerKeyNote.setAttribute('data-scale-type', 'major');
+            
+            const xOuter = centerOffset + radiusOuter * Math.cos(angle);
+            const yOuter = centerOffset + radiusOuter * Math.sin(angle);
+            outerKeyNote.style.left = `${xOuter}px`;
+            outerKeyNote.style.top = `${yOuter}px`;
+            outerKeyNote.addEventListener('click', (e) => {
+                generateScaleFromCircle(keyPair.major, 'major', e.currentTarget);
+            });
+            circleDiagram.appendChild(outerKeyNote);
+
+            // 创建内圈小调音符
+            const innerKeyNote = document.createElement('div');
+            innerKeyNote.className = 'key-note inner';
+            innerKeyNote.innerHTML = `<div class="note-main">${keyPair.minor}</div><div class="note-minor">小调</div>`;
+            innerKeyNote.setAttribute('data-note', keyPair.minor);
+            innerKeyNote.setAttribute('data-scale-type', 'naturalMinor');
+            
+            const xInner = centerOffset + radiusInner * Math.cos(angle);
+            const yInner = centerOffset + radiusInner * Math.sin(angle);
+            innerKeyNote.style.left = `${xInner}px`;
+            innerKeyNote.style.top = `${yInner}px`;
+            innerKeyNote.addEventListener('click', (e) => {
+                generateScaleFromCircle(keyPair.minor, 'naturalMinor', e.currentTarget);
+            });
+            circleDiagram.appendChild(innerKeyNote);
+
+            // 添加连接线
+            if (index < circleOrder.length) { // 避免在最后一个音符后添加线
+                const line = document.createElement('div');
+                line.className = 'circle-line';
+                
+                // 计算线的起始点和结束点
+                // 从外圈音符的中心到下一个外圈音符的中心
+                const nextIndex = (index + 1) % circleOrder.length;
+                const nextAngle = (nextIndex / 12) * 2 * Math.PI - Math.PI / 2;
+
+                const x1 = centerOffset + radiusOuter * Math.cos(angle);
+                const y1 = centerOffset + radiusOuter * Math.sin(angle);
+                const x2 = centerOffset + radiusOuter * Math.cos(nextAngle);
+                const y2 = centerOffset + radiusOuter * Math.sin(nextAngle);
+
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const lineAngle = Math.atan2(y2 - y1, x2 - x1);
+
+                line.style.width = `${length}px`;
+                line.style.left = `${x1}px`;
+                line.style.top = `${y1}px`;
+                line.style.transform = `rotate(${lineAngle}rad)`;
+                line.style.transformOrigin = '0 0'; // 设置旋转中心为线的起点
+                circleDiagram.appendChild(line);
+            }
+        });
     }
     
     // 显示结果函数
@@ -433,20 +538,16 @@ function displaySingleScale(result, resultCard, searchType) {
         });
     });
     
-    // 五度圈音符点击事件
-    circleNotes.forEach(note => {
-        note.addEventListener('click', () => {
-            const noteValue = note.getAttribute('data-note');
-            const scaleType = circleScaleType.value === 'major' ? 'major' : 'naturalMinor';
-            generateScaleFromCircle(noteValue, scaleType);
-        });
-    });
-    
     // 事件监听器
     scaleCategorySelect.addEventListener('change', handleScaleCategoryChange);
     generateScaleBtn.addEventListener('click', generateScale);
     scaleSearchBtn.addEventListener('click', searchScaleByName);
     analyzeScaleBtn.addEventListener('click', analyzeScaleFromNotes);
+
+    // 初始加载时检查是否在五度圈页面，如果是则初始化
+    // 延迟初始化，确保DOM完全渲染
+    // 无论是否在五度圈页面，都尝试初始化，确保内容生成
+    setTimeout(initializeCircleOfFifths, 0);
     
     scaleInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
