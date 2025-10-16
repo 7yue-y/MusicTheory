@@ -3,6 +3,7 @@
 // V0.1 基于音符和音程的算法重新设计
 // V0.2 增加五度圈和调式验证
 // V0.3 增加民族调式功能
+// V0.4 改进民族调式算法：非宫音调式先找宫音再重新排列
 class ScaleGenerator {
     constructor() {
         // 音符类
@@ -190,145 +191,35 @@ class ScaleGenerator {
             ]
         };
 
-        // 民族调式基础定义
-        this.folkScaleDefinitions = {
-            // 五声调式基础音程（相对于宫音）
-            'pentatonic_base': [
-                new this.Interval('per', 1),  // 宫
-                new this.Interval('maj', 2),  // 商
-                new this.Interval('maj', 3),  // 角
-                new this.Interval('per', 5),  // 徵
-                new this.Interval('maj', 6)   // 羽
-            ],
-            
-            // 偏音定义（相对于宫音）
-            'bianyin': {
-                'qingjiao': new this.Interval('per', 4),    // 清角 F
-                'bianzhi': new this.Interval('aug', 4),     // 变徵 #F
-                'biangong': new this.Interval('maj', 7),    // 变宫 B
-                'run': new this.Interval('min', 7)          // 闰 bB
-            }
-        };
-
-        // 民族调式模式定义（使用音程）
+        // 民族调式基础定义 - 只保留宫调式的基础模式
         this.folkScalePatterns = {
-            // 五声调式
+            // 五声调式 - 宫调式
             'pentatonic_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
             ],
-            'pentatonic_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('min', 6),  // 宫
-            ],
-            'pentatonic_jue': [
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-            ],
-            'pentatonic_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('maj', 6),  // 角
-            ],
-            'pentatonic_yu': [
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('min', 6),  // 角
-                new this.Interval('maj', 7),  // 徵
-            ],
             
-            // 六声调式 - 加清角
+            // 六声调式 - 加清角 - 宫调式
             'hexatonic_qingjiao_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
                 new this.Interval('per', 4),  // 清角
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
-                new this.Interval('per', 8)   // 宫(高八度)
-            ],
-            'hexatonic_qingjiao_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('per', 3),  // 清角
-                new this.Interval('min', 4),  // 徵
-                new this.Interval('maj', 5),  // 羽
-                new this.Interval('min', 7),  // 宫
-                new this.Interval('per', 8)   // 商(高八度)
-            ],
-            'hexatonic_qingjiao_jue': [
-                new this.Interval('per', 2),  // 清角
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-                new this.Interval('per', 8)   // 角(高八度)
-            ],
-            'hexatonic_qingjiao_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('maj', 6),  // 角
-                new this.Interval('min', 7),  // 清角
-                new this.Interval('per', 8)   // 徵(高八度)
-            ],
-            'hexatonic_qingjiao_yu': [
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('maj', 5),  // 角
-                new this.Interval('min', 6),  // 清角
-                new this.Interval('maj', 7),  // 徵
-                new this.Interval('per', 8)   // 羽(高八度)
             ],
             
-            // 六声调式 - 加变宫
+            // 六声调式 - 加变宫 - 宫调式
             'hexatonic_biangong_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
                 new this.Interval('maj', 7),  // 变宫
-                new this.Interval('per', 8)   // 宫(高八度)
-            ],
-            'hexatonic_biangong_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('maj', 5),  // 变宫
-                new this.Interval('min', 7),  // 宫
-                new this.Interval('per', 8)   // 商(高八度)
-            ],
-            'hexatonic_biangong_jue': [
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('maj', 5),  // 变宫
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-                new this.Interval('per', 8)   // 角(高八度)
-            ],
-            'hexatonic_biangong_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('maj', 3),  // 变宫
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('maj', 6),  // 角
-                new this.Interval('per', 8)   // 徵(高八度)
-            ],
-            'hexatonic_biangong_yu': [
-                new this.Interval('maj', 2),  // 变宫
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('min', 6),  // 角
-                new this.Interval('maj', 7),  // 徵
-                new this.Interval('per', 8)   // 羽(高八度)
             ],
             
-            // 七声调式 - 清乐（五声+清角+变宫）
+            // 七声调式 - 清乐 - 宫调式
             'qingle_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
@@ -336,46 +227,9 @@ class ScaleGenerator {
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
                 new this.Interval('maj', 7),  // 变宫
-                new this.Interval('per', 8)   // 宫(高八度)
-            ],
-            'qingle_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('per', 3),  // 清角
-                new this.Interval('min', 4),  // 徵
-                new this.Interval('maj', 5),  // 羽
-                new this.Interval('maj', 6),  // 变宫
-                new this.Interval('min', 7),  // 宫
-                new this.Interval('per', 8)   // 商(高八度)
-            ],
-            'qingle_jue': [
-                new this.Interval('per', 2),  // 清角
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('maj', 5),  // 变宫
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-                new this.Interval('per', 8)   // 角(高八度)
-            ],
-            'qingle_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('maj', 3),  // 变宫
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('maj', 6),  // 角
-                new this.Interval('min', 7),  // 清角
-                new this.Interval('per', 8)   // 徵(高八度)
-            ],
-            'qingle_yu': [
-                new this.Interval('maj', 2),  // 变宫
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('maj', 5),  // 角
-                new this.Interval('min', 6),  // 清角
-                new this.Interval('maj', 7),  // 徵
-                new this.Interval('per', 8)   // 羽(高八度)
             ],
             
-            // 七声调式 - 雅乐（五声+变徵+变宫）
+            // 七声调式 - 雅乐 - 宫调式
             'yayue_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
@@ -383,46 +237,9 @@ class ScaleGenerator {
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
                 new this.Interval('maj', 7),  // 变宫
-                new this.Interval('per', 8)   // 宫(高八度)
-            ],
-            'yayue_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('aug', 3),  // 变徵
-                new this.Interval('min', 4),  // 徵
-                new this.Interval('maj', 5),  // 羽
-                new this.Interval('maj', 6),  // 变宫
-                new this.Interval('min', 7),  // 宫
-                new this.Interval('per', 8)   // 商(高八度)
-            ],
-            'yayue_jue': [
-                new this.Interval('aug', 2),  // 变徵
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('maj', 5),  // 变宫
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-                new this.Interval('per', 8)   // 角(高八度)
-            ],
-            'yayue_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('maj', 3),  // 变宫
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('aug', 6),  // 变徵
-                new this.Interval('min', 7),  // 角
-                new this.Interval('per', 8)   // 徵(高八度)
-            ],
-            'yayue_yu': [
-                new this.Interval('maj', 2),  // 变宫
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('aug', 5),  // 变徵
-                new this.Interval('min', 6),  // 角
-                new this.Interval('maj', 7),  // 徵
-                new this.Interval('per', 8)   // 羽(高八度)
             ],
             
-            // 七声调式 - 燕乐（五声+清角+闰）
+            // 七声调式 - 燕乐 - 宫调式
             'yanyue_gong': [
                 new this.Interval('maj', 2),  // 商
                 new this.Interval('maj', 3),  // 角
@@ -430,47 +247,9 @@ class ScaleGenerator {
                 new this.Interval('per', 5),  // 徵
                 new this.Interval('maj', 6),  // 羽
                 new this.Interval('min', 7),  // 闰
-                new this.Interval('per', 8)   // 宫(高八度)
-            ],
-            'yanyue_shang': [
-                new this.Interval('maj', 2),  // 角
-                new this.Interval('per', 3),  // 清角
-                new this.Interval('min', 4),  // 徵
-                new this.Interval('maj', 5),  // 羽
-                new this.Interval('min', 6),  // 闰
-                new this.Interval('min', 7),  // 宫
-                new this.Interval('per', 8)   // 商(高八度)
-            ],
-            'yanyue_jue': [
-                new this.Interval('per', 2),  // 清角
-                new this.Interval('min', 3),  // 徵
-                new this.Interval('maj', 4),  // 羽
-                new this.Interval('min', 5),  // 闰
-                new this.Interval('min', 6),  // 宫
-                new this.Interval('maj', 7),  // 商
-                new this.Interval('per', 8)   // 角(高八度)
-            ],
-            'yanyue_zhi': [
-                new this.Interval('maj', 2),  // 羽
-                new this.Interval('min', 3),  // 闰
-                new this.Interval('min', 4),  // 宫
-                new this.Interval('maj', 5),  // 商
-                new this.Interval('maj', 6),  // 角
-                new this.Interval('min', 7),  // 清角
-                new this.Interval('per', 8)   // 徵(高八度)
-            ],
-            'yanyue_yu': [
-                new this.Interval('min', 2),  // 闰
-                new this.Interval('min', 3),  // 宫
-                new this.Interval('maj', 4),  // 商
-                new this.Interval('maj', 5),  // 角
-                new this.Interval('min', 6),  // 清角
-                new this.Interval('maj', 7),  // 徵
-                new this.Interval('per', 8)   // 羽(高八度)
             ]
         };
 
-        
         // 音阶名称映射
         this.scaleNames = {
             // 西洋大小调
@@ -488,7 +267,7 @@ class ScaleGenerator {
             'mixolydian': '混合利底亚调式',
             'aeolian': '爱奥尼亚调式',
             'locrian': '洛克利亚调式',
-// 民族调式
+            // 民族调式
             'pentatonic_gong': '五声宫调式',
             'pentatonic_shang': '五声商调式',
             'pentatonic_jue': '五声角调式',
@@ -538,7 +317,7 @@ class ScaleGenerator {
             'locrian': '半音-全音-全音-半音-全音-全音-全音'
         };
 
-// 民族调式偏音描述
+        // 民族调式偏音描述
         this.folkScaleBianyin = {
             'hexatonic_qingjiao_gong': '偏音：清角（宫音上方纯四度）',
             'hexatonic_qingjiao_shang': '偏音：清角（宫音上方纯四度）',
@@ -641,8 +420,52 @@ class ScaleGenerator {
         }
     }
 
-// 生成民族调式 - 使用音程度数算法
+    // 生成民族调式 - 改进版本：非宫音调式先找宫音再重新排列
     generateFolkScale(rootNoteStr, scaleType) {
+        try {
+            const rootNote = this.Note.fromString(rootNoteStr);
+            
+            // 提取调式信息
+            const scaleParts = scaleType.split('_');
+            const toneCount = scaleParts[0]; // pentatonic, hexatonic, qingle, yayue, yanyue
+            const modeType = scaleParts[1]; // 调式类型: gong, shang, jue, zhi, yu
+            const bianyinType = scaleParts[2]; // 偏音类型: qingjiao, biangong, 等
+            
+            // 如果是宫调式，直接生成
+            if (modeType === 'gong') {
+                return this.generateFolkScaleDirect(rootNoteStr, scaleType);
+            }
+            
+            // 对于非宫调式，先找到宫音
+            const gongNote = this.findGongNote(rootNote, modeType);
+            
+            // 生成对应的宫调式音阶
+            const gongScaleType = this.getGongScaleType(scaleType);
+            const gongScale = this.generateFolkScaleDirect(gongNote.toString(), gongScaleType);
+            
+            if (gongScale.error) {
+                return gongScale;
+            }
+            
+            // 重新排列音阶，以输入的主音开始
+            const rearrangedNotes = this.rearrangeFolkScale(gongScale.notes, rootNoteStr, modeType);
+            
+            return {
+                name: `${rootNoteStr}${this.scaleNames[scaleType]}`,
+                root: rootNoteStr,
+                notes: rearrangedNotes,
+                type: scaleType,
+                isFolkScale: true,
+                bianyin: this.folkScaleBianyin[scaleType] || '无偏音',
+                gongNote: gongNote.toString() // 调试信息，显示宫音
+            };
+        } catch (error) {
+            return { error: `生成民族调式时出错: ${error.message}` };
+        }
+    }
+
+    // 直接生成民族调式（用于宫调式）
+    generateFolkScaleDirect(rootNoteStr, scaleType) {
         try {
             const rootNote = this.Note.fromString(rootNoteStr);
             const pattern = this.folkScalePatterns[scaleType];
@@ -674,6 +497,56 @@ class ScaleGenerator {
         } catch (error) {
             return { error: `生成民族调式时出错: ${error.message}` };
         }
+    }
+
+    // 根据调式找到宫音
+    findGongNote(rootNote, modeType) {
+        const modeToGongInterval = {
+            'shang': new this.Interval('per', 4),   // 商调式：宫音在下方的纯四度
+            'jue': new this.Interval('min', 6),     // 角调式：宫音在下方大三度
+            'zhi': new this.Interval('per', 5),     // 徵调式：宫音在上方纯四度（下方纯五度）
+            'yu': new this.Interval('maj', 6)       // 羽调式：宫音在上方小三度（下方大六度）
+        };
+        
+        const interval = modeToGongInterval[modeType];
+        if (!interval) {
+            return rootNote; // 宫调式直接返回
+        }
+        
+        // 计算宫音位置
+        return this.addInterval(rootNote, interval);
+    }
+
+    // 获取对应的宫调式类型
+    getGongScaleType(scaleType) {
+        const parts = scaleType.split('_');
+        if (parts[0] === 'pentatonic') {
+            return 'pentatonic_gong';
+        } else if (parts[0] === 'hexatonic') {
+            return `hexatonic_${parts[1]}_gong`;
+        } else {
+            return `${parts[0]}_gong`;
+        }
+    }
+
+    // 重新排列音阶
+    rearrangeFolkScale(gongScaleNotes, targetRoot, modeType) {
+        // 找到目标主音在宫调式音阶中的位置
+        const targetIndex = gongScaleNotes.findIndex(note => note === targetRoot);
+        
+        if (targetIndex === -1) {
+            // 如果找不到，返回原始音阶
+            return gongScaleNotes;
+        }
+        
+        // 重新排列音阶，从目标主音开始
+        const rearranged = [];
+        for (let i = targetIndex; i < gongScaleNotes.length + targetIndex; i++) {
+            const index = i % gongScaleNotes.length;
+            rearranged.push(gongScaleNotes[index]);
+        }
+        
+        return rearranged;
     }
 
     // 添加半音到音符
@@ -711,9 +584,7 @@ class ScaleGenerator {
         
         const suggestion = enharmonicMap[rootNote];
         if (suggestion && this.isValidKey(suggestion, scaleType)) {
-            
             return '不认真听课吧，TMD就没有这个调';
-            return `建议使用 ${suggestion}${this.scaleNames[scaleType]}`;
         }
         
         return '请选择传统调性系统中的调性';
@@ -1122,11 +993,6 @@ class ScaleGenerator {
         // 如果输入音符数量接近音阶音符数量，认为是完整音阶
         return inputIndices.length >= scaleIndices.length * 0.8;
     }
-    
-    
-
-
-
 
     // 生成音阶的详细描述
     generateScaleDescription(scale) {
@@ -1134,16 +1000,22 @@ class ScaleGenerator {
             return scale.error;
         }
         
-        let description = `🎵 ${scale.name}\n\n`;
+        let description = `🎼 ${scale.name}\n\n`;
         description += `🎼 音阶音符: ${scale.notes.join(' - ')}\n\n`;
         
-        // 民族调式显示偏音信息
+        // 民族调式显示偏音信息和宫音
         if (scale.isFolkScale) {
             description += `🎶 调式类型: 民族调式\n\n`;
+            if (scale.gongNote) {
+                description += `🎹 宫音: ${scale.gongNote}\n\n`;
+            }
             if (scale.bianyin) {
                 description += `🎹 偏音信息: ${scale.bianyin}\n\n`;
             }
         } else {
+            // 西洋调式显示调式类型和结构
+            description += `🎶 调式类型: 西洋调式\n\n`;
+            
             // 西洋调式显示结构
             if (this.scaleDescriptions[scale.type]) {
                 description += `📐 音阶结构: ${this.scaleDescriptions[scale.type]}\n\n`;
