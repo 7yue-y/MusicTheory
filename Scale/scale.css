@@ -139,7 +139,8 @@
     }
     
     .selector-group {
-        min-width: 100%;
+        flex: 0 0 100%;
+        min-width: auto; /* Reset min-width to avoid potential conflicts */
     }
     
     .notes-input-box {
