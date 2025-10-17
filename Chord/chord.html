@@ -5,93 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>乐理知识库 - 和弦查找</title>
     <link rel="stylesheet" href="../Main.css">
-    <style>
-        .chord-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .chord-input-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chord-input-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-        
-        .chord-input {
-            padding: 10px 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-        
-        .chord-input:focus {
-            outline: none;
-            border-color: #4a90e2;
-        }
-        
-        .chord-input::placeholder {
-            color: #999;
-        }
-        
-        .notes-input-container {
-            margin-bottom: 16px;
-        }
-        
-        @media (max-width: 768px) {
-            .chord-inputs {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* 和弦音符横向显示样式 - 使用导航栏颜色 */
-        .chord-notes {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-            justify-content: center;
-        }
-        
-        .note-item {
-            background: #4a7694; /* 导航栏深蓝色 */
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 16px;
-            min-width: 40px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .chord-notes-small {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 8px 0;
-        }
-        
-        .note-item-small {
-            background: #4a7694; /* 导航栏深蓝色 */
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-    </style>
+    <link rel="stylesheet" href="chord.css">
 </head>
 <body>
     <div class="container">
@@ -114,8 +28,9 @@
                         <li><a href="../Scale/scale.html">音阶查找</a></li>
                         <li><a href="chord.html" class="active">和弦查找</a></li>
                         <li><a href="../Theory/theory.html">其他乐理查找</a></li>
+                        <li><a href="../LearningCenter/learningCenter.html">乐理学习中心</a></li>
                         <li><a href="../Practice/Practice.html">视唱练耳中心</a></li>
-                        <li><a href="about.html">关于</a></li>
+                        <li><a href="About/about.html">关于</a></li>
                     </ul>
                 </nav>
             </div>

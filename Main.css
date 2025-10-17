@@ -1149,9 +1149,9 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .scale-selector {
+    /* .scale-selector {
         grid-template-columns: 1fr;
-    }
+    } */
     
     .circle-of-fifths-container {
         flex-direction: column;
@@ -1168,6 +1168,7 @@ body {
 @media (max-width: 768px) {
     body {
         padding: 8px;
+        padding-top: 80px; /* 保持为固定导航栏留出空间 */
         font-size: 13px;
     }
     
@@ -1375,6 +1376,7 @@ body {
 @media (max-width: 480px) {
     body {
         padding: 5px;
+        padding-top: 80px; /* 保持为固定导航栏留出空间 */
     }
     
     .container {
