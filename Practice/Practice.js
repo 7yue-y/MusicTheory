@@ -1,8 +1,7 @@
+
 // 初始化音频上下文和合成器
-let synth;
 let recorder;
-let isRecording = false;
-let recordedNotes = [];
+let isRecording = false; // 用于MIDI录音
 let currentMIDIPlayer;
 let audioContext;
 let analyser;
@@ -151,32 +150,9 @@ function addNoteToEditor(note) {
     }
 }
 
-// 初始化钢琴音源
-function initPianoSound() {
-    // 使用更真实的钢琴音色
-    synth = new Tone.Sampler({
-        urls: {
-            "C4": "C4.mp3",
-            "D#4": "Ds4.mp3", 
-            "F#4": "Fs4.mp3",
-            "A4": "A4.mp3",
-        },
-        baseUrl: "https://tonejs.github.io/audio/salamander/",
-        onload: () => {
-            console.log("钢琴音源加载完成");
-        }
-    }).toDestination();
-}
-
 // 播放音符
 function playNote(note) {
-    if (!synth) {
-        initPianoSound();
-    }
-    
-    // 将音符转换为频率
-    const frequency = Tone.Frequency(note).toFrequency();
-    synth.triggerAttackRelease(note, "8n");
+    AudioSystem.playNote(note, "8n");
     
     // 更新显示
     const noteDisplay = document.getElementById('currentNote');
@@ -382,60 +358,42 @@ function loadPreset() {
             {note: 'F4', time: 3}, {note: 'G4', time: 4}, {note: 'A4', time: 5}, 
             {note: 'A#4', time: 6}, {note: 'C5', time: 7}
         ];
-    } else if (currentPreset === 'C旋律大调(上行)') {
-        presetNotes = [
+    } else if (currentPreset === 'C旋律大调') {
+        const ascending = [
             {note: 'C4', time: 0}, {note: 'D4', time: 1}, {note: 'E4', time: 2}, 
             {note: 'F4', time: 3}, {note: 'G4', time: 4}, {note: 'A4', time: 5}, 
-            {note: 'B4', time: 6}, {note: 'C5', time: 7},
-            {note: 'D5', time: 8}, {note: 'E5', time: 9}, {note: 'F#4', time: 10}, 
-            {note: 'G#4', time: 11}, {note: 'A5', time: 12}, {note: 'B5', time: 13}, 
-            {note: 'C6', time: 14}
+            {note: 'B4', time: 6}, {note: 'C5', time: 7}
         ];
-    } else if (currentPreset === 'C旋律大调(下行)') {
-        presetNotes = [
-            {note: 'C6', time: 0}, {note: 'B5', time: 1}, {note: 'A5', time: 2}, 
-            {note: 'G4', time: 3}, {note: 'F4', time: 4}, {note: 'E5', time: 5}, 
-            {note: 'D5', time: 6}, {note: 'C5', time: 7},
-            {note: 'B4', time: 8}, {note: 'A4', time: 9}, {note: 'G4', time: 10}, 
-            {note: 'F4', time: 11}, {note: 'E4', time: 12}, {note: 'D4', time: 13}, 
-            {note: 'C4', time: 14}
+        const descending = [
+            {note: 'C5', time: 8}, {note: 'A#4', time: 9}, {note: 'G#4', time: 10},
+            {note: 'G4', time: 11}, {note: 'F4', time: 12}, {note: 'E4', time: 13},
+            {note: 'D4', time: 14}, {note: 'C4', time: 15}
         ];
+        presetNotes = [...ascending, ...descending];
     } else if (currentPreset === 'a自然小调') {
         presetNotes = [
             {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F4', time: 5}, 
-            {note: 'G4', time: 6}, {note: 'A4', time: 7},
-            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
-            {note: 'E5', time: 11}, {note: 'F5', time: 12}, {note: 'G5', time: 13}, 
-            {note: 'A5', time: 14}
+            {note: 'G4', time: 6}, {note: 'A4', time: 7}
         ];
     } else if (currentPreset === 'a和声小调') {
         presetNotes = [
             {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F4', time: 5}, 
-            {note: 'G#4', time: 6}, {note: 'A4', time: 7},
-            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
-            {note: 'E5', time: 11}, {note: 'F5', time: 12}, {note: 'G#5', time: 13}, 
-            {note: 'A5', time: 14}
+            {note: 'G#4', time: 6}, {note: 'A4', time: 7}
         ];
-    } else if (currentPreset === 'a旋律小调(上行)') {
-        presetNotes = [
+    } else if (currentPreset === 'a旋律小调') {
+        const ascending = [
             {note: 'A3', time: 0}, {note: 'B3', time: 1}, {note: 'C4', time: 2}, 
             {note: 'D4', time: 3}, {note: 'E4', time: 4}, {note: 'F#4', time: 5}, 
-            {note: 'G#4', time: 6}, {note: 'A4', time: 7},
-            {note: 'B4', time: 8}, {note: 'C5', time: 9}, {note: 'D5', time: 10}, 
-            {note: 'E5', time: 11}, {note: 'F#5', time: 12}, {note: 'G#5', time: 13}, 
-            {note: 'A5', time: 14}
+            {note: 'G#4', time: 6}, {note: 'A4', time: 7}
         ];
-    } else if (currentPreset === 'a旋律小调(下行)') {
-        presetNotes = [
-            {note: 'A5', time: 0}, {note: 'G5', time: 1}, {note: 'F5', time: 2}, 
-            {note: 'E5', time: 3}, {note: 'D5', time: 4}, {note: 'C5', time: 5}, 
-            {note: 'B4', time: 6}, {note: 'A4', time: 7},
-            {note: 'G4', time: 8}, {note: 'F4', time: 9}, {note: 'E4', time: 10}, 
-            {note: 'D4', time: 11}, {note: 'C4', time: 12}, {note: 'B3', time: 13}, 
-            {note: 'A3', time: 14}
+        const descending = [
+            {note: 'A4', time: 8}, {note: 'G4', time: 9}, {note: 'F4', time: 10}, 
+            {note: 'E4', time: 11}, {note: 'D4', time: 12}, {note: 'C4', time: 13}, 
+            {note: 'B3', time: 14}, {note: 'A3', time: 15}
         ];
+        presetNotes = [...ascending, ...descending];
     }
     
     // 在编辑器中显示预设音符
@@ -590,51 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    document.getElementById('recordCustomBtn').addEventListener('click', function() {
-        if (this.textContent === '录制演唱') {
-            this.textContent = '停止录制';
-            isRecording = true;
-            recordedNotes = [];
-            document.getElementById('customNote').textContent = '正在录制...';
-        } else {
-            this.textContent = '录制演唱';
-            isRecording = false;
-            document.getElementById('customNote').textContent = '录制完成，共录制 ' + recordedNotes.length + ' 个音符';
-        }
-    });
-    
-    document.getElementById('playCustomBtn').addEventListener('click', () => {
-        if (recordedNotes.length === 0) {
-            document.getElementById('customNote').textContent = '没有录制任何音符';
-            return;
-        }
-        
-        document.getElementById('customNote').textContent = '播放录音...';
-        
-        // 播放录制的音符
-        recordedNotes.forEach((noteData, index) => {
-            setTimeout(() => {
-                playNote(noteData.note);
-                document.getElementById('customNote').textContent = noteData.note;
-                
-                // 高亮对应的钢琴键
-                const keys = document.querySelectorAll('#piano .key');
-                keys.forEach(key => {
-                    if (key.dataset.note === noteData.note) {
-                        key.classList.add('active');
-                        setTimeout(() => {
-                            key.classList.remove('active');
-                        }, 500);
-                    }
-                });
-            }, index * 500);
-        });
-    });
-    
-    document.getElementById('clearCustomBtn').addEventListener('click', () => {
-        recordedNotes = [];
-        document.getElementById('customNote').textContent = '已清除录音';
-    });
     
     document.getElementById('savePresetBtn').addEventListener('click', () => {
         savePreset();

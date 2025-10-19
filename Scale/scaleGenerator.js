@@ -596,7 +596,8 @@ class ScaleGenerator {
         }
         
         // 西洋大小调需要验证
-        const keyType = scaleType.includes('minor') ? 'naturalMinor' : 'major';
+        const minorTypes = ['naturalMinor', 'harmonicMinor', 'melodicMinor', 'aeolian'];
+        const keyType = minorTypes.includes(scaleType) ? 'naturalMinor' : 'major';
         return this.validKeys[keyType].includes(rootNote);
     }
     
@@ -620,7 +621,8 @@ class ScaleGenerator {
     
     // 获取调号
     getKeySignature(rootNote, scaleType) {
-        const keyType = scaleType.includes('minor') ? 'naturalMinor' : 'major';
+        const minorTypes = ['naturalMinor', 'harmonicMinor', 'melodicMinor', 'aeolian'];
+        const keyType = minorTypes.includes(scaleType) ? 'naturalMinor' : 'major';
         const sharpsOrFlats = this.circleOfFifths[keyType][rootNote];
         
         if (sharpsOrFlats > 0) {
@@ -634,7 +636,8 @@ class ScaleGenerator {
 
     // 获取调号中的音符
     getKeySignatureNotes(rootNote, scaleType) {
-        const keyType = scaleType.includes('minor') ? 'naturalMinor' : 'major';
+        const minorTypes = ['naturalMinor', 'harmonicMinor', 'melodicMinor', 'aeolian'];
+        const keyType = minorTypes.includes(scaleType) ? 'naturalMinor' : 'major';
         
         if (!this.circleOfFifths[keyType] || this.circleOfFifths[keyType][rootNote] === undefined) {
             return { sharps: [], flats: [] };
