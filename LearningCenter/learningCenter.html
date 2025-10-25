@@ -1,3 +1,5 @@
+
+<!-- 发布版 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -5,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>乐理学习中心 - 乐理知识库</title>
     <link rel="stylesheet" href="../Main.css">
+    <link rel="stylesheet" href="learningCenter.css">
 </head>
 <body>
     <div class="container">
@@ -41,18 +44,128 @@
                 <p class="subtitle">系统化的音乐理论学习平台</p>
             </div>
             
-            <!-- 页面介绍 -->
-            <div class="page-intro">
-                <h2>欢迎来到乐理学习中心</h2>
-                <p>这里将为您提供系统化的音乐理论学习内容，帮助您从基础到进阶逐步掌握乐理知识。</p>
+            <!-- 前言部分 -->
+            <section class="preface-section">
+                <div class="preface-card">
+                    <h2>前言</h2>
+                    <div class="preface-content">
+                        <p>音乐是声音的"语言"。与人类语言类似，音乐理论是对过去实践的提炼，充满着约定俗成、经验总结。</p>
+                        <p>不同的语言可以描述同一事物，音乐也一样，存在着不同的理论流派，以及历史的、文化的、个人的因素，很多问题没有统一的标准、正确的答案。音乐时刻都在发展，不断有新的事物涌现。既有理论只能作为参考，没有"绝对普适"、"永远正确"的公理定律。音乐的问题永远有新知、永远有例外，需要自由开放的心态来学习。</p>
+                        <p>大家在学习音乐时，往往会忽视一个重要的内容，就是"听音乐"。人的听觉感受存在规律，但很多时候也不那么讲"逻辑"。除了少数特殊技法外，绝大多数音乐都是"创作"而非"推导"出来的。所以在学习音乐时，不要过于追求"绝对"的理论，而是要多花时间去听你喜欢的音乐。</p>
+                        <p>本网站默认你以及有一定的音乐常识，并以传统西洋传统的调性和声为基础进行学习，对于要参加应试教育考试的用户，需要注意甄别与"权威"教材、"标准"答案的差异，以免影响成绩。</p>
+                        <p>那么，未来的音乐家们，在聆听完这首作者超级喜欢的音乐后就来正式开始基础乐理的学习吧！</p>
+                    </div>
+                    <div class="preface-actions">
+                        <button class="start-learning-btn" id="startLearningBtn">开始学习</button>
+                        <button class="directory-nav-btn" id="directoryNavBtn">章节目录</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 身份选择模态框 -->
+            <div class="modal-overlay" id="identityModal">
+                <div class="identity-modal">
+                    <div class="modal-header">
+                        <h3>等等，你是否会思考，我为什么需要学习乐理？</h3>
+                        <h3>在我给予你答案之前，现在的你是......</h3>
+                    </div>
+                    <div class="identity-options">
+                        <div class="identity-card" data-identity="enthusiast">
+                            <div class="card-icon">🎵</div>
+                            <h4>音乐爱好者</h4>
+                            <p>出于兴趣学习音乐理论</p>
+                        </div>
+                        <div class="identity-card" data-identity="professional">
+                            <div class="card-icon">🎼</div>
+                            <h4>音乐专业生</h4>
+                            <p>专业学习音乐理论</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- 内容区域 - 暂时空白 -->
-            <section class="learning-content">
-                <div class="welcome-card">
-                    <div class="welcome-icon">📚</div>
-                    <h3>学习内容即将上线</h3>
-                    <p>我们正在为您准备丰富的乐理学习内容，敬请期待！</p>
+            <!-- 身份确认卡片 -->
+            <div class="modal-overlay" id="confirmModal">
+                <div class="confirm-modal">
+                    <div class="modal-header">
+                        <h3 id="confirmTitle">确认您的身份</h3>
+                    </div>
+                    <div class="confirm-content">
+                        <p id="confirmMessage">请确认您的身份信息，我们将为您提供个性化的学习体验。</p>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-secondary" id="backBtn">返回</button>
+                        <button class="btn-primary" id="nextChapterBtn">进入第一章</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 章节列表 -->
+            <section class="chapters-section" id="chaptersSection" style="display: none;">
+                <div class="chapters-container">
+                    <h2>学习章节</h2>
+                    <div class="chapters-grid">
+                        <div class="chapter-card">
+                            <div class="chapter-icon">🎵</div>
+                            <h3>第一章 音程与和弦</h3>
+                            <p>学习音的循环、音程，以及大、小三和弦的网格图表示。</p>
+                            <a href="第一章 音程与和弦/chapter1-1.html" class="chapter-btn">开始学习</a>
+                        </div>
+                        <div class="chapter-card">
+                            <div class="chapter-icon">🎼</div>
+                            <h3>第二章 大调和声</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card">
+                            <div class="chapter-icon">🎹</div>
+                            <h3>第三章 小调和声</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🎸</div>
+                            <h3>第四章 副调和弦</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🎷</div>
+                            <h3>第五章 变化与延伸</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🎻</div>
+                            <h3>第六章 排列与连接</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🎺</div>
+                            <h3>第七章 和弦外音</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🥁</div>
+                            <h3>第八章 和弦变换</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">🎶</div>
+                            <h3>第九章 音乐的结构</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                        <div class="chapter-card coming-soon">
+                            <div class="chapter-icon">📖</div>
+                            <h3>第十章 基础篇总结</h3>
+                            <p>即将推出...</p>
+                            <button class="chapter-btn" disabled>敬请期待</button>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -63,5 +176,11 @@
     </div>
 
     <script src="../app.js"></script>
+    <script src="learningCenter.js"></script>
+    
+    <!-- 背景音乐元素 -->
+    <audio id="backgroundMusic" loop>
+        <source src="UserMusic/ChiliChill-A cup of coffee.mp3" type="audio/mpeg">
+    </audio>
 </body>
 </html>

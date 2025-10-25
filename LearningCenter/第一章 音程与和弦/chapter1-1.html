@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.1 音程 - 乐理学习中心</title>
+    <link rel="stylesheet" href="../../Main.css">
+    <link rel="stylesheet" href="../learningCenter.css">
+    <link rel="stylesheet" href="chapter1.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <h1 class="logo">🎼 乐理知识库</h1>
+                </div>
+                <nav class="navbar">
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="../../index.html">主页</a></li>
+                        <li><a href="../../Scale/scale.html">音阶查找</a></li>
+                        <li><a href="../../Chord/chord.html">和弦查找</a></li>
+                        <li><a href="../../Theory/theory.html">其他乐理查找</a></li>
+                        <li><a href="../learningCenter.html" class="active">乐理学习中心</a></li>
+                        <li><a href="../../Practice/Practice.html">试唱练耳中心</a></li>
+                        <li><a href="../../About/about.html">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h1>第一章 音程与和弦</h1>
+                <p class="subtitle">1.1 音程</p>
+            </div>
+
+            <nav class="chapter-nav">
+                <a href="../learningCenter.html" class="nav-btn">返回目录</a>
+                <div class="chapter-progress">1.1 / 1.2</div>
+                <a href="chapter1-2.html" class="nav-btn">下一页</a>
+            </nav>
+
+            <section class="chapter-section">
+                <h2>1.1 音程</h2>
+                <div class="content-card">
+                    <p>音乐界将两个音之间的距离称为音程（Interval），沿用历史习惯，以"性质+度数"来描述。</p>
+                    
+                    <p>音程中较低的音称为根音（Bottom note）或下方音（Lower note），较高的音称为冠音（Top note）或上方音（Higher note）。度数（Number）简单来说就是根音到冠音之间跨过的字母数。例如从C到相同音高的C，只跨过C一个字母，称为一度（Unison），到高八度的C则跨过C-D-E-F-G-A-B-C共八个字母，所以是八度（Octave，8ve）；从C到G有五个字母，因此就是五度（Fifth，5th）。</p>
+                    
+                    <div class="example-box">
+                        <h4>度数示例：</h4>
+                        <ul>
+                            <li>C → C（相同音高）：只跨过C一个字母，称为一度（Unison）</li>
+                            <li>C → 高八度C：跨过C-D-E-F-G-A-B-C共八个字母，所以是八度（Octave，8ve）</li>
+                            <li>C → G：有五个字母，因此就是五度（Fifth，5th）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="theory-point">
+                        <h3>音程的性质</h3>
+                        <p>有一些音程虽然度数相同，但实际距离不同，例如C-F与C-F♭都是四度，但前者比后者多一个半音。为了区分，人们引入了音程的性质（Quality）：</p>
+                        <ul>
+                            <li><strong>大（Major）</strong>：如大三度 C-E（Major 3rd，M3）</li>
+                            <li><strong>小（Minor）</strong>：如小三度 C-E♭（Minor 3rd，m3）</li>
+                            <li><strong>纯（Perfect）</strong>：如纯五度 C-G</li>
+                            <li><strong>增（Augmented）</strong>：如增二度 C-D♯（Augmented 2nd，A2）</li>
+                            <li><strong>减（Diminished）</strong>：如减四度 C-F♭</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box">
+                        <h4>二度音程示例：</h4>
+                        <p>C到D♭、D、D♯都是二度，然而：</p>
+                        <ul>
+                            <li>C-D♭只有一个半音：小二度（Minor 2nd，m2）</li>
+                            <li>C-D有两个半音：大二度（Major 2nd，M2）</li>
+                            <li>C-D♯有三个半音：增二度（Augmented 2nd，A2）</li>
+                        </ul>
+                        <p>性质均不相同，分别叫做小二度、大二度、增二度。</p>
+                    </div>
+                </div>
+            </section>
+
+            <nav class="chapter-nav bottom-nav">
+                <a href="../learningCenter.html" class="nav-btn">返回目录</a>
+                <a href="chapter1-2.html" class="nav-btn">下一页</a>
+            </nav>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 艺考乐理知识库</p>
+        </footer>
+    </div>
+
+    <script src="../../app.js"></script>
+</body>
+</html>
