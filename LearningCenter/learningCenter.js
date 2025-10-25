@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         hideConfirmModal();
         
         // 直接跳转到第一章页面
-        window.location.href = '第一章 循环与网格图/chapter1.html';
+        window.location.href = '第一章 音程与和弦/chapter1-1.html';
     }
     
     // 显示章节列表
